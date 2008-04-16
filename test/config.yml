@@ -1,0 +1,71 @@
+# album_cache_options:
+#   servers:
+#     - 127.0.0.1:11211
+#     
+# doctor_be_cache_options:
+#   adapter: drb
+#   store_options:
+#     host: "druby://127.0.0.1:61676"
+#     
+# doctor_ce_cache_options:
+#   adapter: drb
+#   store_options:
+#     host: "druby://127.0.0.1:61676"
+#     
+# cachetastic_caches_page_cache_options:
+#   default_expiry: <%= 60 * 60 %>
+#   expiry_swing: <%= 60 * 15 %>
+# 
+# cachetastic_caches_rails_session_cache_options:
+#   adapter: local_memory
+#   store_options:
+#     dir: /cachetastic/
+# 
+# memcache_benchmark_cache_options:
+#   debug: false
+#   adapter: memcache
+#   marshall_method: none
+#   store_options:  
+#     c_threshold: 10_000
+#     compression: true
+#     debug: false
+#     readonly: false
+#     urlencode: false
+# 
+my_file_store_cache_options:
+  debug: false
+  adapter: file
+  store_options:
+    dir: "/cachetastic/test"
+#     
+# file_benchmark_cache_options:
+#   debug: false
+#   adapter: file
+#   store_options:
+#     dir: "/cachetastic/benchmark"
+#     
+# local_memory_benchmark_cache_options:
+#   debug: false
+#   adapter: local_memory
+  
+cachetastic_default_options:
+  debug: true
+  adapter: local_memory
+  marshall_method: none
+  default_expiry: <%= 86400 %>
+  # buffer: simple
+  # store_options:  
+  #   c_threshold: 10_000
+  #   compression: true
+  #   debug: false
+  #   readonly: false
+  #   urlencode: false
+  logging:
+    # logger_1:
+    #   type: file
+    #   file: log/memcached.log
+    logger_2:
+      type: console
+      level: debug
+  # servers:
+  #   - 127.0.0.1:11211
