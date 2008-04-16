@@ -1,0 +1,5 @@
+--- !ruby/object:RubyForgeConfig 
+gem_name: cachetastic
+package: cachetastic
+project: magrathea
+version: 1.4.2
