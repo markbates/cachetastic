@@ -18,6 +18,24 @@ end
 class MyFileStoreCache < Cachetastic::Caches::Base
 end
 
+class FooBarCache < Cachetastic::Caches::Base
+end
+
+class ArAlbumCache < Cachetastic::Caches::Base
+  class << self
+    def get(key, num)
+      logger.info(key, num)
+      super(key) do
+        a = []
+        num.times do
+          a << ArAlbum.find(1)
+        end
+        set(key, a)
+      end
+    end # get
+  end # self
+end # AlbumCache
+
 
 #---- AR:
 AR_DB = File.join(File.dirname(__FILE__), "ar_test.db")

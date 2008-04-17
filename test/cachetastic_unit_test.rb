@@ -5,7 +5,6 @@ class CachetasticUnitTest < Test::Unit::TestCase
 
   def setup
     Cachetastic::Caches::Base.expire_all
-    AlbumCache.expire_all
   end
 
   def test_class_cannot_be_instaniate
@@ -46,17 +45,6 @@ class CachetasticUnitTest < Test::Unit::TestCase
     assert_equal a, Cachetastic::Caches::Base.get(:testing_expire_all)
     Cachetastic::Caches::Base.expire_all
     assert_nil Cachetastic::Caches::Base.get(:testing_expire_all)
-  end
-  
-  def test_album_cache
-    assert true
-    res = AlbumCache.get(:recent_albums, 5)
-    assert_not_nil res
-    assert res.is_a?(Array)
-    assert_equal 5, res.size
-    res.each do |r|
-       assert r.is_a?(ArAlbum)
-    end
   end
   
   def test_local_memory_auto_expire

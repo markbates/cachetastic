@@ -3,6 +3,8 @@ require File.join(File.dirname(__FILE__), "test_helper")
 class ActiveRecordTest < Test::Unit::TestCase
   
   def setup
+    ArAlbumCache.expire_all
+    Cachetastic::Caches::Base.expire_all
     FileUtils.rm_f(AR_DB, :verbose => true) if File.exists?(AR_DB)
     ArMigration.up
     a = ArAlbum.create(:title => "Abbey Road", :artist => "The Beatles")
@@ -15,6 +17,17 @@ class ActiveRecordTest < Test::Unit::TestCase
   
   def teardown
     FileUtils.rm_f(AR_DB, :verbose => true) if File.exists?(AR_DB)
+  end
+  
+  def test_album_cache
+    assert true
+    res = ArAlbumCache.get(:recent_albums, 5)
+    assert_not_nil res
+    assert res.is_a?(Array)
+    assert_equal 5, res.size
+    res.each do |r|
+       assert r.is_a?(ArAlbum)
+    end
   end
   
   def test_extensions
