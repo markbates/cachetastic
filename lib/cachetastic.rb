@@ -13,7 +13,7 @@ rescue Exception => e
   # if you don't have memcache installed, don't 
   # blow up, print a message, and you can't use
   # the memcache adapter.
-  puts e.message
+  puts "Warning: You don't have the memcache gem installed which means you can't use the Cachetastic::Adapters::Memcache adapter."
 end
 
 
