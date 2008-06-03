@@ -1,5 +1,6 @@
 require "test/unit"
 require File.join(File.dirname(__FILE__), "..", "lib", "cachetastic")
+require 'rubygems'
 require 'mack_ruby_core_extensions'
 require 'active_record'
 require 'data_mapper'
@@ -38,7 +39,8 @@ end # AlbumCache
 
 
 #---- AR:
-AR_DB = File.join(File.dirname(__FILE__), "ar_test.db")
+AR_DB = File.join(Dir.pwd, "ar_test.db")
+puts "AR_DB: #{AR_DB}"
 ActiveRecord::Base.establish_connection({:adapter => "sqlite3", :database => AR_DB})
 
 class ArAlbum < ActiveRecord::Base
@@ -61,6 +63,10 @@ class ArMigration < ActiveRecord::Migration
       t.column :title, :string
       t.column :album_id, :integer
     end
+  end
+  def self.down
+    drop_table :ar_songs
+    drop_table :ar_albums
   end
 end
 

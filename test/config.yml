@@ -52,7 +52,7 @@ cachetastic_default_options:
   debug: true
   adapter: local_memory
   marshall_method: none
-  default_expiry: <%= 86400 %>
+  default_expiry: 2
   # buffer: simple
   # store_options:  
   #   c_threshold: 10_000

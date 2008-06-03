@@ -5,7 +5,11 @@ class ActiveRecordTest < Test::Unit::TestCase
   def setup
     ArAlbumCache.expire_all
     Cachetastic::Caches::Base.expire_all
-    FileUtils.rm_f(AR_DB, :verbose => true) if File.exists?(AR_DB)
+    #FileUtils.rm_f(AR_DB, :verbose => true)# if File.exists?(AR_DB)
+    begin
+      ArMigration.down
+    rescue Exception => e
+    end
     ArMigration.up
     a = ArAlbum.create(:title => "Abbey Road", :artist => "The Beatles")
     ArSong.create(:title => "Come Together", :album_id => a.id)
@@ -16,7 +20,8 @@ class ActiveRecordTest < Test::Unit::TestCase
   end
   
   def teardown
-    FileUtils.rm_f(AR_DB, :verbose => true) if File.exists?(AR_DB)
+    ArMigration.down
+    #FileUtils.rm_f(AR_DB, :verbose => true)# if File.exists?(AR_DB)
   end
   
   def test_album_cache
