@@ -19,39 +19,37 @@ end
 
 module Cachetastic #:nodoc:#
   module Caches #:nodoc:#
-    module ActiveRecord #:nodoc:#
-    end
   end
   module Adapters #:nodoc:#
   end
   module Errors #:nodoc:#
   end
-  module Helpers #:nodoc:#
-    module ActiveRecord #:nodoc:#
-    end
+  module Cacheable
   end
 end
 module ActiveRecord #:nodoc:#
 end
 
-require 'cachetastic_connection'
-require 'cachetastic_logger'
-require 'caches/cachetastic_caches_base'
-require 'caches/cachetastic_caches_page_cache'
-require 'caches/cachetastic_caches_rails_session_cache'
-require 'caches/cachetastic_caches_mack_session_cache'
-require 'errors/cachetastic_errors_unsupported_adapter'
-require 'adapters/cachetastic_adapters_base'
-require 'adapters/cachetastic_adapters_store_object'
-require 'adapters/cachetastic_adapters_memcache'
-require 'adapters/cachetastic_adapters_local_memory'
-require 'adapters/cachetastic_adapters_file_base'
-require 'adapters/cachetastic_adapters_file'
-require 'adapters/cachetastic_adapters_html_file'
-require 'adapters/cachetastic_adapters_drb'
-require 'cachetastic_cacheable'
-require 'rails_extensions/cachetastic_active_record_base'
-require 'rails_extensions/cgi_session_cachetastic_store'
+home = File.dirname(__FILE__)
+
+require File.join(home, 'cachetastic_connection')
+require File.join(home, 'cachetastic_logger')
+require File.join(home, 'caches/cachetastic_caches_base')
+require File.join(home, 'caches/cachetastic_caches_page_cache')
+require File.join(home, 'caches/cachetastic_caches_rails_session_cache')
+require File.join(home, 'caches/cachetastic_caches_mack_session_cache')
+require File.join(home, 'errors/cachetastic_errors_unsupported_adapter')
+require File.join(home, 'adapters/cachetastic_adapters_base')
+require File.join(home, 'adapters/cachetastic_adapters_store_object')
+require File.join(home, 'adapters/cachetastic_adapters_memcache')
+require File.join(home, 'adapters/cachetastic_adapters_local_memory')
+require File.join(home, 'adapters/cachetastic_adapters_file_base')
+require File.join(home, 'adapters/cachetastic_adapters_file')
+require File.join(home, 'adapters/cachetastic_adapters_html_file')
+require File.join(home, 'adapters/cachetastic_adapters_drb')
+require File.join(home, 'cachetastic_cacheable')
+require File.join(home, 'rails_extensions/cachetastic_active_record_base')
+require File.join(home, 'rails_extensions/cgi_session_cachetastic_store')
 
 #--
 # http://rdoc.sourceforge.net/doc/index.html
