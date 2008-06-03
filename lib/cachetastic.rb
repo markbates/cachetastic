@@ -49,7 +49,7 @@ require 'adapters/cachetastic_adapters_file_base'
 require 'adapters/cachetastic_adapters_file'
 require 'adapters/cachetastic_adapters_html_file'
 require 'adapters/cachetastic_adapters_drb'
-require 'helpers/cachetastic_helpers_active_record'
+require 'cachetastic_cacheable'
 require 'rails_extensions/cachetastic_active_record_base'
 require 'rails_extensions/cgi_session_cachetastic_store'
 

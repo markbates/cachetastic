@@ -10,16 +10,16 @@ require 'rubygems/gem_runner'
 
 GEM_VERSION = "1.5.0"
 GEM_NAME = "cachetastic"
-GEM_RUBYFORGE_PROJECT = "cachetastic"
+GEM_RUBYFORGE_PROJECT = "magrathea"
 
 gem_spec = Gem::Specification.new do |s|
   s.name = GEM_NAME
   s.version = GEM_VERSION
-  s.summary = "#{GEM_NAME}"
-  s.description = "#{GEM_NAME} was developed by: markbates"
+  s.summary = "A very simple, yet very powerful caching framework for Ruby."
+  s.description = "A very simple, yet very powerful caching framework for Ruby."
   s.author = "markbates"
-  #s.email = ""
-  #s.homepage = ""
+  s.email = "mark@mackframework.com"
+  s.homepage = "http://www.mackframework.com"
 
   s.test_files = FileList['test/**/*']
 

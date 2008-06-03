@@ -37,20 +37,20 @@ class ActiveRecordTest < Test::Unit::TestCase
   
   def test_extensions
     album = ArAlbum.find(1)
-    assert !Cachetastic::Caches::ActiveRecord.const_defined?("ArAlbumCache")
+    assert !Cachetastic::Cacheable.const_defined?("ArAlbumCache")
     album.cache_self
-    assert Cachetastic::Caches::ActiveRecord.const_defined?("ArAlbumCache")
-    assert_equal album, Cachetastic::Caches::ActiveRecord::ArAlbumCache.get(1)
+    assert Cachetastic::Cacheable.const_defined?("ArAlbumCache")
+    assert_equal album, Cachetastic::Cacheable::ArAlbumCache.get(1)
     
     song = ArSong.find(1)
-    assert !Cachetastic::Caches::ActiveRecord.const_defined?("ArSongCache")
+    assert !Cachetastic::Cacheable.const_defined?("ArSongCache")
     song.cache_self
-    assert Cachetastic::Caches::ActiveRecord.const_defined?("ArSongCache")
-    assert_equal song, Cachetastic::Caches::ActiveRecord::ArSongCache.get(1)
-    assert_equal album, Cachetastic::Caches::ActiveRecord::ArAlbumCache.get(1)
+    assert Cachetastic::Cacheable.const_defined?("ArSongCache")
+    assert_equal song, Cachetastic::Cacheable::ArSongCache.get(1)
+    assert_equal album, Cachetastic::Cacheable::ArAlbumCache.get(1)
     
     song.uncache_self
-    assert_nil Cachetastic::Caches::ActiveRecord::ArSongCache.get(1)
+    assert_nil Cachetastic::Cacheable::ArSongCache.get(1)
     
     ac = ArAlbum.get_from_cache(1)
     assert_not_nil ac

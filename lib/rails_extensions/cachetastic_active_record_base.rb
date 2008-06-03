@@ -1,9 +1,9 @@
 class ActiveRecord::Base
   
-  include Cachetastic::Helpers::ActiveRecord # include helpers at instance level
+  include Cachetastic::Cacheable # include helpers at instance level
   
   class << self
-    include Cachetastic::Helpers::ActiveRecord # include helpers at class level
+    include Cachetastic::Cacheable # include helpers at class level
     
     # Returns an object from the cache for a given key.
     # If the object returned is nil and the self_populate parameter is true
