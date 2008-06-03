@@ -74,16 +74,16 @@ module Cachetastic
       #     end
       #   end
       # 
-      # Person.new.always_the_same(1,2) # => 3
-      # Person.new.always_the_same(2,2) # => 3
-      # Person.new.always_the_same(3,3) # => 3
-      # Person.cacher("always_the_same") # => 3
-      # Person.get_from_cache("always_the_same") # => 3
-      # Cachetastic::Cacheable::PersonCache.get("always_the_same") # => 3
-      # 
-      # Person.cacher("say_hi") {"Hi There"} # => "Hi There"
-      # Person.get_from_cache("say_hi") # => "Hi There"
-      # Cachetastic::Cacheable::PersonCache.get("say_hi") # => "Hi There"
+      #   Person.new.always_the_same(1,2) # => 3
+      #   Person.new.always_the_same(2,2) # => 3
+      #   Person.new.always_the_same(3,3) # => 3
+      #   Person.cacher("always_the_same") # => 3
+      #   Person.get_from_cache("always_the_same") # => 3
+      #   Cachetastic::Cacheable::PersonCache.get("always_the_same") # => 3
+      #   
+      #   Person.cacher("say_hi") {"Hi There"} # => "Hi There"
+      #   Person.get_from_cache("say_hi") # => "Hi There"
+      #   Cachetastic::Cacheable::PersonCache.get("say_hi") # => "Hi There"
       def cacher(key, expiry = 0)
         cache_class.get(key) do
           if block_given?
