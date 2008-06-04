@@ -67,6 +67,10 @@ class CacheableTest < Test::Unit::TestCase
   def test_get_from_cache
     assert_nil Person.get_from_cache("i should be nil")
     assert_equal 86, Person.get_from_cache("maxwell smart") {86}
+    x = Person.get_from_cache("my name") do |key|
+      "Mark Bates"
+    end
+    assert_equal "Mark Bates", x
   end
   
 end

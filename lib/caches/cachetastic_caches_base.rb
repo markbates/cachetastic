@@ -55,7 +55,7 @@ class Cachetastic::Caches::Base
     # will be run. This can be used to JIT caches, just make
     # sure in the block to call the set method because the
     # results of the block are not automatically cached.
-    def get(key)
+    def get(key, &block)
       res = nil
       do_with_logging(:get, key) do
         retryable(:on => ArgumentError) do

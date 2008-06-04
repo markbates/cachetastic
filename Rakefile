@@ -8,7 +8,7 @@ require 'rubyforge'
 require 'rubygems'
 require 'rubygems/gem_runner'
 
-GEM_VERSION = "1.6.0"
+GEM_VERSION = "1.7.0"
 GEM_NAME = "cachetastic"
 GEM_RUBYFORGE_PROJECT = "magrathea"
 
@@ -25,9 +25,6 @@ gem_spec = Gem::Specification.new do |s|
 
   s.files = FileList['lib/**/*.rb', 'README', 'doc/**/*.*', 'bin/**/*.*']
   s.require_paths << 'lib'
-  
-  # This has been removed in RubyGems in 1.0, so I would STRONGLY recommend not using it!
-  s.autorequire = "cachetastic"
 
   #s.bindir = "bin"
   #s.executables << "cachetastic"
@@ -36,13 +33,13 @@ gem_spec = Gem::Specification.new do |s|
   s.add_dependency("application_configuration")
   #s.add_dependency("", "")
   #s.extensions << ""
-  #s.extra_rdoc_files = ["README"]
-  #s.has_rdoc = true
+  s.extra_rdoc_files = ["README"]
+  s.has_rdoc = true
   #s.platform = "Gem::Platform::Ruby"
   #s.required_ruby_version = ">= 1.8.5"
   #s.requirements << "An ice cold beer."
   #s.requirements << "Some free time!"
-  #s.rubyforge_project = "cachetastic"
+  s.rubyforge_project = "magrathea"
 end
 
 # rake package

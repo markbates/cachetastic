@@ -1,8 +1,5 @@
 module Cachetastic
   # Include this module into an Object to achieve simplistic Object level caching.
-  # When including this module you *MUST* create an instance level method called cachetastic_key and 
-  # have it return a valid key! If you return nil from the cachetastic_key method you will not be
-  # able to use the cache_self and uncache_self methods.
   # 
   # Example:
   #   class Person
@@ -123,7 +120,7 @@ module Cachetastic
     # Unless the object's cachetastic_key method returns nil this method will store
     # the object in the cache using the object's cachetastic_key as the key.
     # You *MUST* create an instance level method called cachetastic_key and 
-    # have it return a valid key! If you return nil from the cachetastic_key method you will not be
+    # have it return a valid key! If you return nil from the cachetastic_key method or you will not be
     # able to use the cache_self and uncache_self methods.
     # 
     # Example:
@@ -147,7 +144,7 @@ module Cachetastic
     # Unless the object's cachetastic_key method returns nil this method will delete
     # the object in the cache using the object's cachetastic_key as the key.
     # You *MUST* create an instance level method called cachetastic_key and 
-    # have it return a valid key! If you return nil from the cachetastic_key method you will not be
+    # have it return a valid key! If you return nil from the cachetastic_key method or you will not be
     # able to use the cache_self and uncache_self methods.
     # 
     # Example:
@@ -180,9 +177,6 @@ module Cachetastic
     
     module ClassOnlyMethods
       # Returns an object from the cache for a given key.
-      # If the object returned is nil and the self_populate parameter is true
-      # then the key will be used to try and find the object in the database,
-      # set the object into the cache, and then return the object.
       def get_from_cache(key, &block)
         cache_class.get(key, &block)
       end

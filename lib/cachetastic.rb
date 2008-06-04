@@ -6,6 +6,7 @@ require 'yaml'
 require 'zlib'
 require 'pp'
 require 'drb'
+require 'mack_ruby_core_extensions'
 require 'application_configuration'
 begin
   require 'memcache'
