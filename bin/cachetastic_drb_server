@@ -51,7 +51,7 @@ end
 opts.parse!(ARGV)
 
 if SERVER_OPTIONS.config_file
-  app_config.load_file(SERVER_OPTIONS.config_file)
+  configatron.load_file(SERVER_OPTIONS.config_file)
 end
 
 module Cachetastic

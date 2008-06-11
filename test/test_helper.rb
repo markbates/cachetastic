@@ -8,7 +8,7 @@ require 'data_mapper'
 # place common methods, assertions, and other type things in this file so
 # other tests will have access to them.
 
-app_config.load_file(File.join(File.dirname(__FILE__), "config.yml"))
+require File.join(File.dirname(__FILE__), "config")
 
 class MyTempOptionsCache < Cachetastic::Caches::Base
 end

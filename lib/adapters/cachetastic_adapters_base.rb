@@ -66,9 +66,9 @@ class Cachetastic::Adapters::Base
     #   Cachetastic::Caches::PageCache # => cachetastic_caches_page_cache_options
     #   MyAwesomeCache # => my_awesome_cache_options
     def get_options(name)
-      options = (app_config.cachetastic_default_options || {})
+      options = (configatron.cachetastic_default_options || {})
       options = {"adapter" => "local_memory"}.merge(options)
-      options = options.merge(app_config.send(name.methodize + "_options") || {})
+      options = options.merge(configatron.send(name.methodize + "_options") || {})
       options
     end
   end

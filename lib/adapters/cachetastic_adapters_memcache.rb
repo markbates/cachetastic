@@ -71,7 +71,7 @@ class Cachetastic::Adapters::Memcache < Cachetastic::Adapters::Base
         end
       end
       if memcached_tool_found
-        app_config.memcache_servers.each do |server|
+        configatron.memcache_servers.each do |server|
           puts `memcached_tool #{server}`
         end
       end

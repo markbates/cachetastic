@@ -7,7 +7,7 @@ require 'zlib'
 require 'pp'
 require 'drb'
 require 'mack_ruby_core_extensions'
-require 'application_configuration'
+require 'configatron'
 begin
   require 'memcache'
 rescue Exception => e
