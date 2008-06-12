@@ -65,6 +65,7 @@ class Cachetastic::Adapters::Base
   
   class << self
     def configuration(name)
+      name = "#{name}_options"
       return configatron.send(name) if configatron.exists?(name)
       return configatron.cachetastic_default_options
     end

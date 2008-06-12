@@ -6,7 +6,7 @@ class Cachetastic::Adapters::FileBase < Cachetastic::Adapters::Base
   attr_reader :hashed_keys
   
   def setup
-    @directory = File.join(self.store_options["dir"], self.name.to_s)
+    @directory = File.join(self.configuration.store_options.dir, self.name.to_s)
     FileUtils.mkdir_p(self.directory, :verbose => self.debug?)
     @hashed_keys = {}
   end
