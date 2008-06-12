@@ -1,15 +1,17 @@
 # This class handles logging for the caches and their adapters.
 class Cachetastic::Logger
   
-  attr_accessor :options
-  attr_accessor :cache_name
+  # attr_accessor :options
+  # attr_accessor :cache_name
+  attr_accessor :loggers
   
-  def initialize(options, cache_name)
-    self.options = options
-    self.cache_name = cache_name
-    self.options.each_pair do |n, opts|
-      opts["level"] = (opts["level"] ||= "info").to_sym
-    end
+  def initialize(loggers)
+    @loggers = [loggers].flatten
+    # self.options = options
+    # self.cache_name = cache_name
+    # self.options.each_pair do |n, opts|
+    #   opts["level"] = (opts["level"] ||= "info").to_sym
+    # end
   end
   
   LOG_LEVELS = [:fatal, :error, :warn, :info, :debug]
@@ -28,16 +30,19 @@ class Cachetastic::Logger
       exs.each do |ex|
         lm << "\n#{ex.message}\n" << ex.backtrace.join("\n")
       end
-      self.options.each_pair do |n, opts|
-        if LOG_LEVELS.index(opts["level"]) >= LOG_LEVELS.index(level)
-          case opts["type"]
-          when "file"
-            File.open(opts["file"], "a") {|f| f.puts(lm)} 
-          when "console"
-            puts lm
-          end
-        end
+      self.loggers.each do |log|
+        log.send(level, lm)
       end
+      # self.options.each_pair do |n, opts|
+      #   if LOG_LEVELS.index(opts["level"]) >= LOG_LEVELS.index(level)
+      #     case opts["type"]
+      #     when "file"
+      #       File.open(opts["file"], "a") {|f| f.puts(lm)} 
+      #     when "console"
+      #       puts lm
+      #     end
+      #   end
+      # end
     end
   end
   

@@ -52,6 +52,15 @@ require File.join(home, 'cachetastic_cacheable')
 require File.join(home, 'rails_extensions/cachetastic_active_record_base')
 require File.join(home, 'rails_extensions/cgi_session_cachetastic_store')
 
+unless configatron.exists?(:cachetastic_default_options)
+  configatron do |config|
+    config.namespace(:cachetastic_default_options) do |c|
+      c.debug = false
+      c.adapter = :local_memory
+    end
+  end
+end
+
 #--
 # http://rdoc.sourceforge.net/doc/index.html
 #++

@@ -15,7 +15,7 @@ class Cachetastic::Connection
     name = name.to_sym
     conn = self.connections[name]
     return conn if conn && conn.valid?
-    adapter = Cachetastic::Adapters::Base.get_options(name)["adapter"].camelcase
+    adapter = Cachetastic::Adapters::Base.configuration(name).adapter.to_s.camelcase
     conn = "Cachetastic::Adapters::#{adapter}".constantize.new(name)
     self.connections[name.to_sym] = conn
     return conn
