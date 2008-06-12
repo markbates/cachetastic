@@ -57,6 +57,7 @@ unless configatron.exists?(:cachetastic_default_options)
     config.namespace(:cachetastic_default_options) do |c|
       c.debug = false
       c.adapter = :local_memory
+      c.logger = ::Logger.new(STDOUT)
     end
   end
 end

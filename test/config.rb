@@ -12,6 +12,8 @@ configatron do |config|
     c.adapter = :local_memory
     c.marshall_method = :none
     c.default_expiry = 2
-    c.logger = Logger.new(STDOUT)
+    log = Logger.new(STDOUT)
+    log.level = Logger::DEBUG
+    c.logger = log
   end
 end

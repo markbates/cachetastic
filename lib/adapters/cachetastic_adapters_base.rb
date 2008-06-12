@@ -23,7 +23,7 @@ class Cachetastic::Adapters::Base
   
   def initialize(name)
     @name = name
-    @logger = Cachetastic::Logger.new(configuration.logger)
+    @logger = Cachetastic::Logger.new(configuration.retrieve(:logger, ::Logger.new(STDOUT)))
     setup
     if self.debug?
       self.logger.debug(self.name, :self, self.inspect)
