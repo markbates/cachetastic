@@ -40,6 +40,9 @@ end # AlbumCache
 class YoungMcCache < Cachetastic::Caches::Base
 end
 
+class DrBobCache < Cachetastic::Caches::Base
+end
+
 
 #---- AR:
 AR_DB = File.join(Dir.pwd, "ar_test.db")

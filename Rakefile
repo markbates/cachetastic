@@ -8,7 +8,7 @@ require 'rubyforge'
 require 'rubygems'
 require 'rubygems/gem_runner'
 
-GEM_VERSION = "1.7.0"
+GEM_VERSION = "1.9.9.100"
 GEM_NAME = "cachetastic"
 GEM_RUBYFORGE_PROJECT = "magrathea"
 
@@ -26,8 +26,8 @@ gem_spec = Gem::Specification.new do |s|
   s.files = FileList['lib/**/*.rb', 'README', 'doc/**/*.*', 'bin/**/*.*']
   s.require_paths << 'lib'
 
-  #s.bindir = "bin"
-  #s.executables << "cachetastic"
+  s.bindir = "bin"
+  s.executables << "cachetastic_drb_server"
   #s.default_executable = ""
   s.add_dependency("mack_ruby_core_extensions")
   s.add_dependency("configatron")

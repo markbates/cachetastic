@@ -18,8 +18,8 @@ class Cachetastic::Adapters::Drb < Cachetastic::Adapters::Base
   end
 
   def setup
-    self.all_options["marshall_method"] = "ruby"
-    self.drb_store = DRbObject.new_with_uri(self.store_options["host"])
+    # self.all_options["marshall_method"] = "ruby"
+    self.drb_store = DRbObject.new_with_uri(configuration.servers)
   end
   
   def expire_all

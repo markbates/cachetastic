@@ -32,7 +32,7 @@
       }
       
       # set the servers to be used for memcache
-      cdo.memcache_servers = ["127.0.0.1:11211"] # ip:port used for memcache
+      cdo.servers = ["127.0.0.1:11211"] # ip:port used for memcache
 
       # listed below are the options for file:
       cdo.namespace(:store_options) do |so|
@@ -40,9 +40,7 @@
       end
 
       # listed below are the options for drb:
-      cdo.namespace(:store_options) do |so|
-        so.host = "druby://127.0.0.1:61676"
-      end
+      cdo.servers = ["druby://127.0.0.1:61676"]
 
       # configure logging for this cache
       # n number of logs can be configured for a cache

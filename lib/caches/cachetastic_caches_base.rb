@@ -177,9 +177,9 @@ class Cachetastic::Caches::Base
     def unmarshall(value)
       return value if value.nil?
       return case adapter.configuration.retrieve(:marshall_method, :none).to_sym
-      when "yaml"
+      when :yaml
         YAML.load(value)
-      when "ruby"
+      when :ruby
         Marshal.load(value)
       else
         value

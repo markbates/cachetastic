@@ -64,6 +64,12 @@ class Cachetastic::Adapters::Base
   end
   
   class << self
+    # Returns either the options
+    # Options need to be specified in configatrion as the methodized name of the cache with
+    # _options attached at the end.
+    # Examples:
+    #   Cachetastic::Caches::PageCache # => cachetastic_caches_page_cache_options
+    #   MyAwesomeCache # => my_awesome_cache_options
     def configuration(name)
       name = "#{name}_options"
       return configatron.send(name) if configatron.exists?(name)
