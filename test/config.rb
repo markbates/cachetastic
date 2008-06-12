@@ -16,4 +16,18 @@ configatron do |config|
     log.level = Logger::DEBUG
     c.logger = log
   end
+  config.namespace(:young_mc_cache_options) do |c|
+    c.debug = true
+    c.adapter = :memcache
+    c.default_expiry = 2
+    c.logger = Logger.new(STDOUT)
+    c.memcache_servers = "127.0.0.1:11211"
+    c.store_options = {
+      :c_threshold => "10_000",
+      :compression => true,
+      :debug => false,
+      :readonly => false,
+      :urlencode => false
+    }
+  end
 end

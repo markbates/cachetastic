@@ -24,11 +24,11 @@
       # these options get passed on directly to the store.
       # listed below are options for memcache:
       cdo.store_options = {
-        :c_threshold = "10_000",
-        :compression = true,
-        :debug = false,
-        :readonly = false,
-        :urlencode = false
+        :c_threshold => "10_000",
+        :compression => true,
+        :debug => false,
+        :readonly => false,
+        :urlencode => false
       }
       
       # set the servers to be used for memcache
