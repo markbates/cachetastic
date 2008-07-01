@@ -24,16 +24,16 @@ class Cachetastic::Adapters::Memcache < Cachetastic::Adapters::Base
     self.version = self.get_version(self.name)
   end
   
-  def set(key, value, expiry = 0)
-    self.conn.set(key, value, expiry)
+  def set(key, value, expiry = 0, raw = false)
+    self.conn.set(key, value, expiry, raw)
   end
   
   def delete(key, delay = 0)
     self.conn.delete(key, delay)
   end
   
-  def get(key)
-    self.conn.get(key)
+  def get(key, raw = false)
+    self.conn.get(key, raw)
   end
   
   def expire_all

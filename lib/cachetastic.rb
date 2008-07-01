@@ -6,7 +6,6 @@ require 'yaml'
 require 'zlib'
 require 'pp'
 require 'drb'
-require 'mack_ruby_core_extensions'
 require 'configatron'
 begin
   require 'memcache'
@@ -17,6 +16,16 @@ rescue Exception => e
   puts "Warning: You don't have the memcache gem installed which means you can't use the Cachetastic::Adapters::Memcache adapter."
 end
 
+class Object
+  # Uses <code>define_method</code> to create an empty for the method parameter defined.
+  # That method will then raise MethodNotImplemented. This is useful for creating interfaces
+  # and you want to stub out methods that others need to implement.
+  def self.needs_method(meth)
+    define_method(meth) do
+      raise NoMethodError.new("The interface you are using requires you define the following method '#{meth}'")
+    end
+  end
+end
 
 module Cachetastic #:nodoc:#
   module Caches #:nodoc:#

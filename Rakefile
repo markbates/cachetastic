@@ -29,7 +29,6 @@ gem_spec = Gem::Specification.new do |s|
   s.bindir = "bin"
   s.executables << "cachetastic_drb_server"
   #s.default_executable = ""
-  s.add_dependency("mack_ruby_core_extensions")
   s.add_dependency("configatron")
   #s.add_dependency("", "")
   #s.extensions << ""
