@@ -8,7 +8,7 @@ require 'rubyforge'
 require 'rubygems'
 require 'rubygems/gem_runner'
 
-GEM_VERSION = "1.7.2"
+GEM_VERSION = "1.7.3"
 GEM_NAME = "cachetastic"
 GEM_RUBYFORGE_PROJECT = "magrathea"
 
@@ -30,7 +30,7 @@ gem_spec = Gem::Specification.new do |s|
   #s.executables << "cachetastic"
   #s.default_executable = ""
   # s.add_dependency("mack_ruby_core_extensions")
-  s.add_dependency("application_configuration")
+  s.add_dependency("application_configuration", "1.5.2")
   #s.add_dependency("", "")
   #s.extensions << ""
   s.extra_rdoc_files = ["README"]
