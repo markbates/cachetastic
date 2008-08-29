@@ -8,7 +8,7 @@ require 'rubyforge'
 require 'rubygems'
 require 'rubygems/gem_runner'
 
-GEM_VERSION = "1.7.3"
+GEM_VERSION = "1.7.4"
 GEM_NAME = "cachetastic"
 GEM_RUBYFORGE_PROJECT = "magrathea"
 
@@ -30,7 +30,7 @@ gem_spec = Gem::Specification.new do |s|
   #s.executables << "cachetastic"
   #s.default_executable = ""
   # s.add_dependency("mack_ruby_core_extensions")
-  s.add_dependency("application_configuration", "1.5.2")
+  s.add_dependency("application_configuration", "1.5.3")
   #s.add_dependency("", "")
   #s.extensions << ""
   s.extra_rdoc_files = ["README"]
@@ -66,6 +66,7 @@ desc "Release the gem"
 task :release => :install do |t|
   begin
     rf = RubyForge.new
+    rf.configure
     rf.login
     begin
       rf.add_release(GEM_RUBYFORGE_PROJECT, GEM_NAME, GEM_VERSION, File.join("pkg", "#{GEM_NAME}-#{GEM_VERSION}.gem"))
