@@ -30,7 +30,7 @@ gem_spec = Gem::Specification.new do |s|
   s.executables << "cachetastic_drb_server"
   #s.default_executable = ""
   s.add_dependency("configatron", '1.2.1')
-  #s.add_dependency("", "")
+  s.add_dependency("mack-facets")
   #s.extensions << ""
   s.extra_rdoc_files = ["README"]
   s.has_rdoc = true
