@@ -7,8 +7,8 @@ require 'ostruct'
 
 # require the necessary gems:
 require 'rubygems'
-gem 'mack_ruby_core_extensions'
-require 'mack_ruby_core_extensions'
+gem 'mack-facets'
+require 'mack-facets'
 gem 'configatron'
 require 'configatron'
 gem 'cachetastic'

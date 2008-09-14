@@ -20,7 +20,7 @@
 class Cachetastic::Adapters::Memcache < Cachetastic::Adapters::Base
   
   def setup
-    self.conn = MemCache.new(configuration.servers, configuration.store_options.merge({:namespace => self.namespace}))
+    self.conn = MemCache.new(configuration.servers, configuration.store_options.to_hash.merge({:namespace => self.namespace}))
     self.version = self.get_version(self.name)
   end
   
@@ -91,7 +91,7 @@ class Cachetastic::Adapters::Memcache < Cachetastic::Adapters::Base
   
   def ns_versions
     ivar_cache do
-      ns_conn = MemCache.new(configuration.servers, configuration.store_options.merge({:namespace => :namespace_versions}))
+      ns_conn = MemCache.new(configuration.servers, configuration.store_options.to_hash.merge({:namespace => :namespace_versions}))
     end
   end
   
