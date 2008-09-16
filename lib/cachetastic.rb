@@ -61,15 +61,23 @@ require File.join(home, 'cachetastic_cacheable')
 require File.join(home, 'rails_extensions/cachetastic_active_record_base')
 require File.join(home, 'rails_extensions/cgi_session_cachetastic_store')
 
-unless configatron.exists?(:cachetastic_default_options)
-  configatron do |config|
-    config.namespace(:cachetastic_default_options) do |c|
-      c.debug = false
-      c.adapter = :local_memory
-      c.logger = ::Logger.new(STDOUT)
-    end
-  end
-end
+# unless configatron.exists?(:cachetastic_default_options)
+#   configatron do |config|
+#     config.namespace(:cachetastic_default_options) do |c|
+#       c.debug = false
+#       c.adapter = :local_memory
+#       c.logger = ::Logger.new(STDOUT)
+#     end
+#   end
+# end
+config = {
+  :cachetastic_default_options => {
+    :debug => false,
+    :adapter => :local_memory,
+    :logger => ::Logger.new(STDOUT)
+  }
+}
+configatron.configure_from_hash(config.recursive_merge(configatron.to_hash))
 
 #--
 # http://rdoc.sourceforge.net/doc/index.html

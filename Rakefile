@@ -58,7 +58,7 @@ end
 
 desc "Install the gem"
 task :install => :package do |t|
-  puts `sudo gem install pkg/#{GEM_NAME}-#{GEM_VERSION}.gem`
+  puts `sudo gem install pkg/#{GEM_NAME}-#{GEM_VERSION}.gem --no-update-sources`
 end
 
 desc "Release the gem"

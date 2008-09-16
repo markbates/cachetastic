@@ -72,8 +72,8 @@ class Cachetastic::Adapters::Base
     #   MyAwesomeCache # => my_awesome_cache_options
     def configuration(name)
       name = "#{name}_options"
-      return configatron.send(name) if configatron.exists?(name)
-      return configatron.cachetastic_default_options
+      conf = configatron.retrieve(name, configatron.cachetastic_default_options)
+      conf
     end
   #   # Merges options for the store in the configuration file with the cachetastic_default_options 
   #   # found in the configuration file, and returns the results.
