@@ -8,13 +8,9 @@ require 'rubyforge'
 require 'rubygems'
 require 'rubygems/gem_runner'
 
-GEM_VERSION = "1.9.9.100"
-GEM_NAME = "cachetastic"
-GEM_RUBYFORGE_PROJECT = "magrathea"
-
-gem_spec = Gem::Specification.new do |s|
-  s.name = GEM_NAME
-  s.version = GEM_VERSION
+@gem_spec = Gem::Specification.new do |s|
+  s.name = 'cachetastic'
+  s.version = '1.9.9.100'
   s.summary = "A very simple, yet very powerful caching framework for Ruby."
   s.description = "A very simple, yet very powerful caching framework for Ruby."
   s.author = "markbates"
@@ -42,7 +38,7 @@ gem_spec = Gem::Specification.new do |s|
 end
 
 # rake package
-Rake::GemPackageTask.new(gem_spec) do |pkg|
+Rake::GemPackageTask.new(@gem_spec) do |pkg|
   pkg.need_zip = false
   pkg.need_tar = false
   rm_f FileList['pkg/**/*.*']
@@ -57,28 +53,41 @@ Rake::TestTask.new(:default) do |t|
 end
 
 desc "Install the gem"
-task :install => :package do |t|
-  puts `sudo gem install pkg/#{GEM_NAME}-#{GEM_VERSION}.gem --no-update-sources`
+task :install => [:package] do |t|
+  sudo = ENV['SUDOLESS'] == 'true' || RUBY_PLATFORM =~ /win32|cygwin/ ? '' : 'sudo'
+  puts `#{sudo} gem install #{File.join("pkg", @gem_spec.name)}-#{@gem_spec.version}.gem --no-update-sources`
 end
 
 desc "Release the gem"
 task :release => :install do |t|
   begin
-    rf = RubyForge.new
-    rf.login
+    ac_path = File.join(ENV["HOME"], ".rubyforge", "auto-config.yml")
+    if File.exists?(ac_path)
+      fixed = File.open(ac_path).read.gsub("  ~: {}\n\n", '')
+      fixed.gsub!(/    !ruby\/object:Gem::Version \? \n.+\n.+\n\n/, '')
+      puts "Fixing #{ac_path}..."
+      File.open(ac_path, "w") {|f| f.puts fixed}
+    end
     begin
-      rf.add_release(GEM_RUBYFORGE_PROJECT, GEM_NAME, GEM_VERSION, File.join("pkg", "#{GEM_NAME}-#{GEM_VERSION}.gem"))
+      rf = RubyForge.new
+      rf.configure
+      rf.login
+      rf.add_release(@gem_spec.rubyforge_project, @gem_spec.name, @gem_spec.version, File.join("pkg", "#{@gem_spec.name}-#{@gem_spec.version}.gem"))
     rescue Exception => e
       if e.message.match("Invalid package_id") || e.message.match("no <package_id> configured for")
         puts "You need to create the package!"
-        rf.create_package(GEM_RUBYFORGE_PROJECT, GEM_NAME)
-        rf.add_release(GEM_RUBYFORGE_PROJECT, GEM_NAME, GEM_VERSION, File.join("pkg", "#{GEM_NAME}-#{GEM_VERSION}.gem"))
+        rf.create_package(@gem_spec.rubyforge_project, @gem_spec.name)
+        rf.add_release(@gem_spec.rubyforge_project, @gem_spec.name, @gem_spec.version, File.join("pkg", "#{@gem_spec.name}-#{@gem_spec.version}.gem"))
       else
         raise e
       end
     end
   rescue Exception => e
-    puts e
+    if e.message == "You have already released this version."
+      puts e
+    else
+      raise e
+    end
   end
 end
 
