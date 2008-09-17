@@ -59,8 +59,6 @@ class Cachetastic::Adapters::Base
   
   def configuration
     Cachetastic::Adapters::Base.configuration(self.name)
-    # return configatron.send(self.name) if configatron.exists?(self.name)
-    # return configatron.cachetastic_default_options
   end
   
   class << self
@@ -75,28 +73,6 @@ class Cachetastic::Adapters::Base
       conf = configatron.retrieve(name, configatron.cachetastic_default_options)
       conf
     end
-  #   # Merges options for the store in the configuration file with the cachetastic_default_options 
-  #   # found in the configuration file, and returns the results.
-  #   # Options need to be specified in the configuration file as the methodized name of the cache with
-  #   # _options attached at the end.
-  #   # Examples:
-  #   #   Cachetastic::Caches::PageCache # => cachetastic_caches_page_cache_options
-  #   #   MyAwesomeCache # => my_awesome_cache_options
-  #   def get_options(name)
-  #     options = (configatron.cachetastic_default_options || {})
-  #     options = {"adapter" => "local_memory"}.merge(options)
-  #     options = options.merge(configatron.send(name.methodize + "_options") || {})
-  #     options
-  #   end
   end
-  
-  # private
-  # def configure
-  #   @all_options = Cachetastic::Adapters::Base.get_options(self.name)
-  #   @store_options = (self.all_options["store_options"] || {})
-  #   @servers = self.all_options["servers"]
-  #   @logging = (self.all_options["logging"] || {})
-  #   @logger = Cachetastic::Logger.new(self.logging, self.name)
-  # end
   
 end

@@ -52,7 +52,7 @@ end
 opts.parse!(ARGV)
 
 if SERVER_OPTIONS.config_file
-  configatron.load_file(SERVER_OPTIONS.config_file)
+  configatron.configure_from_yaml(SERVER_OPTIONS.config_file)
 end
 
 module Cachetastic
