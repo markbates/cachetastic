@@ -1,56 +1,48 @@
 =Configuration:
 
-  configatron do |config|
-    config.namespace(:cachetastic_default_options) do |cdo|
-      # this will dump into the log, configuration info for each cache, as well as the .inspect
-      # for each object returned from the cache
-      cdo.debug = false
+    # this will dump into the log, configuration info for each cache, as well as the .inspect
+    # for each object returned from the cache
+    configatron.cachetastic_default_options.debug = false
 
-      # this is the type of file store to be used for this cache.
-      # more adapters can be developed and plugged in as desired
-      cdo.adapter = :local_memory # local_memory | memcache | file | drb | html_file (default: local_memory)
+    # this is the type of file store to be used for this cache.
+    # more adapters can be developed and plugged in as desired
+    configatron.cachetastic_default_options.adapter = :local_memory # local_memory | memcache | file | drb | html_file (default: local_memory)
 
-      # this will marshall objects into and out of the store.
-      cdo.marshall_method = :none # none | yaml | ruby (default: none)
+    # this will marshall objects into and out of the store.
+    configatron.cachetastic_default_options.marshall_method = :none # none | yaml | ruby (default: none)
 
-      # this sets how long objects will live in the cache before they are auto expired.
-      cdo.default_expiry = 86400 # time in seconds (default: 24 hours)
+    # this sets how long objects will live in the cache before they are auto expired.
+    configatron.cachetastic_default_options.default_expiry = 86400 # time in seconds (default: 24 hours)
 
-      # when setting objects into the cache the expiry_swing is +/- to the expiry time.
-      # example: if the expiry time is 1 hour, and the swing is 15 minutes,
-      # objects will go into the cache with an expiry time sometime between 45 mins and 75 mins.
-      cdo.expiry_swing = 60 * 15 # time in seconds (default: 0)
+    # when setting objects into the cache the expiry_swing is +/- to the expiry time.
+    # example: if the expiry time is 1 hour, and the swing is 15 minutes,
+    # objects will go into the cache with an expiry time sometime between 45 mins and 75 mins.
+    configatron.cachetastic_default_options.expiry_swing = 60 * 15 # time in seconds (default: 0)
 
-      # these options get passed on directly to the store.
-      # listed below are options for memcache:
-      cdo.store_options = {
-        :c_threshold => "10_000",
-        :compression => true,
-        :debug => false,
-        :readonly => false,
-        :urlencode => false
-      }
-      
-      # set the servers to be used for memcache
-      cdo.servers = ["127.0.0.1:11211"] # ip:port used for memcache
+    # these options get passed on directly to the store.
+    # listed below are options for memcache:
+    configatron.cachetastic_default_options.store_options.c_threshold = "10_000"
+    configatron.cachetastic_default_options.store_options.compression = true
+    configatron.cachetastic_default_options.store_options.debug = false
+    configatron.cachetastic_default_options.store_options.readonly = false
+    configatron.cachetastic_default_options.store_options.urlencode = false
+    
+    # set the servers to be used for memcache
+    configatron.cachetastic_default_options.servers = ["127.0.0.1:11211"] # ip:port used for memcache
 
-      # listed below are the options for file:
-      cdo.namespace(:store_options) do |so|
-        so.dir = "/cachetastic/caches"
-      end
+    # listed below are the options for file:
+    configatron.cachetastic_default_options.store_options.dir = "/cachetastic/caches"
 
-      # listed below are the options for drb:
-      cdo.servers = ["druby://127.0.0.1:61676"]
+    # listed below are the options for drb:
+    configatron.cachetastic_default_options.servers = ["druby://127.0.0.1:61676"]
 
-      # configure logging for this cache
-      # n number of logs can be configured for a cache
-      log_1 = Logger.new(STDOUT)
-      log_1.level = Logger::DEBUG
-      log_2 = Logger.new("log/cachetastic.log")
-      log_2.level = Logger::ERROR
-      cdo.logger = [log_1, log_2]
-    end
-  end
+    # configure logging for this cache
+    # n number of logs can be configured for a cache
+    log_1 = Logger.new(STDOUT)
+    log_1.level = Logger::DEBUG
+    log_2 = Logger.new("log/cachetastic.log")
+    log_2.level = Logger::ERROR
+    configatron.cachetastic_default_options.logger = [log_1, log_2]
 
 =Cachetastic::Drb::Server
 If you want to use Drb and the Cachetastic::Adapters::Drb adapter, you'll have to use the Cachetastic::Drb::Server that comes with Cachetastic. Using this server is simple. It gets installed as a binary when you install the Cachetastic gem.
