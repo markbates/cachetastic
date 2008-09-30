@@ -14,35 +14,35 @@
 # * valid? - used to test whether or not the store is still valid. If this returns false a new instance of the adapter is created by Cachetastic::Connection
 class Cachetastic::Adapters::Base
   
-  attr_reader :all_options
-  attr_reader :store_options
-  attr_reader :servers
+  # attr_reader :all_options
+  # attr_reader :store_options
+  # attr_reader :servers
   attr_reader :name
-  attr_reader :logging
+  # attr_reader :logging
   attr_reader :logger
   
   def initialize(name)
     @name = name
-    configure
+    @logger = Cachetastic::Logger.new(configuration.retrieve(:logger, ::Logger.new(STDOUT)))
     setup
     if self.debug?
       self.logger.debug(self.name, :self, self.inspect)
-      self.logger.debug(self.name, :options, self.all_options.inspect)
     end
   end
   
-  # foo bar
-  [:setup, :set, :get, :delete, :expire_all, :stats, "valid?"].each do |meth|
-    define_method(meth) do |*args|
-      raise MethodNotImplemented.new(meth)
-    end
-  end
+  needs_method :setup
+  needs_method :set
+  needs_method :get
+  needs_method :delete
+  needs_method :expire_all
+  needs_method :stats
+  needs_method :valid?
   
   # Returns true/or falsed based on whether or not the debug setting is set to true in the
   # configuration file. If the config setting is set, then false is returned.
   def debug?
     ivar_cache(:debug) do
-      (self.all_options["debug"] == true || false)
+      configuration.retrieve(:debug, false)
     end
   end
   
@@ -57,29 +57,22 @@ class Cachetastic::Adapters::Base
     puts s
   end
   
+  def configuration
+    Cachetastic::Adapters::Base.configuration(self.name)
+  end
+  
   class << self
-    # Merges options for the store in the configuration file with the cachetastic_default_options 
-    # found in the configuration file, and returns the results.
-    # Options need to be specified in the configuration file as the methodized name of the cache with
+    # Returns either the options
+    # Options need to be specified in configatrion as the methodized name of the cache with
     # _options attached at the end.
     # Examples:
     #   Cachetastic::Caches::PageCache # => cachetastic_caches_page_cache_options
     #   MyAwesomeCache # => my_awesome_cache_options
-    def get_options(name)
-      options = (app_config.cachetastic_default_options || {})
-      options = {"adapter" => "local_memory"}.merge(options)
-      options = options.merge(app_config.send(name.methodize + "_options") || {})
-      options
+    def configuration(name)
+      name = "#{name}_options"
+      conf = configatron.retrieve(name, configatron.cachetastic_default_options)
+      conf
     end
-  end
-  
-  private
-  def configure
-    @all_options = Cachetastic::Adapters::Base.get_options(self.name)
-    @store_options = (self.all_options["store_options"] || {})
-    @servers = self.all_options["servers"]
-    @logging = (self.all_options["logging"] || {})
-    @logger = Cachetastic::Logger.new(self.logging, self.name)
   end
   
 end

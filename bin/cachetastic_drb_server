@@ -1,3 +1,4 @@
+#!/usr/local/bin/ruby
 require 'thread'
 require 'drb'
 require 'singleton'
@@ -7,10 +8,10 @@ require 'ostruct'
 
 # require the necessary gems:
 require 'rubygems'
-gem 'ruby_extensions'
-require 'ruby_extensions'
-gem 'application_configuration'
-require 'application_configuration'
+gem 'mack-facets'
+require 'mack-facets'
+gem 'configatron'
+require 'configatron'
 gem 'cachetastic'
 require 'cachetastic'
 
@@ -51,7 +52,7 @@ end
 opts.parse!(ARGV)
 
 if SERVER_OPTIONS.config_file
-  app_config.load_file(SERVER_OPTIONS.config_file)
+  configatron.configure_from_yaml(SERVER_OPTIONS.config_file)
 end
 
 module Cachetastic
@@ -68,11 +69,13 @@ module Cachetastic
       def get(ns, key)
         puts "get: #{ns}.#{key}" if SERVER_OPTIONS.verbose
         puts cache_for_namespace(ns).inspect if SERVER_OPTIONS.really_verbose
-        cache_for_namespace(ns).get(key)
+        value = cache_for_namespace(ns).get(key)
+        puts "\tvalue.class: #{value.class}" if SERVER_OPTIONS.verbose
+        value
       end
 
       def set(ns, key, value, expiry = 0)
-        puts "set: #{ns}.#{key}" if SERVER_OPTIONS.verbose
+        puts "set: #{ns}.#{key}: #{value}" if SERVER_OPTIONS.verbose
         cache_for_namespace(ns).set(key, value)
         puts cache_for_namespace(ns).inspect if SERVER_OPTIONS.really_verbose
         value

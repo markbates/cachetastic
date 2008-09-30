@@ -91,7 +91,7 @@ class Cachetastic::Caches::Base
     # used.
     # If there is an expiry_swing set in the config file it will be +/- to the
     # expiry time. See also: calculate_expiry_time
-    def set(key, value, expiry = (adapter.all_options["default_expiry"] || 0))
+    def set(key, value, expiry = adapter.configuration.retrieve(:default_expiry, 0))
       do_with_logging(:set, key) do
         expiry = calculate_expiry_time(expiry)
         adapter.set(key.to_s, marshall(value), expiry.to_i)
@@ -120,9 +120,7 @@ class Cachetastic::Caches::Base
     # Raises a MethodNotImplemented exception. This method should be overridden
     # in the child class to enable a populating the cache with all things that
     # should be in there. 
-    def populate_all
-      raise MethodNotImplemented.new("populate_all")
-    end
+    needs_method :populate_all
     
     # A convenience method that returns statistics for the underlying Cachetastic::Adapters::Base for the cache.
     def stats
@@ -166,10 +164,10 @@ class Cachetastic::Caches::Base
     
     def marshall(value)
       return value if value.nil?
-      return case adapter.all_options["marshall_method"]
-      when "yaml"
+      return case adapter.configuration.retrieve(:marshall_method, :none).to_sym
+      when :yaml
         YAML.dump(value)
-      when "ruby"
+      when :ruby
         Marshal.dump(value)
       else
         value
@@ -178,10 +176,10 @@ class Cachetastic::Caches::Base
     
     def unmarshall(value)
       return value if value.nil?
-      return case adapter.all_options["marshall_method"]
-      when "yaml"
+      return case adapter.configuration.retrieve(:marshall_method, :none).to_sym
+      when :yaml
         YAML.load(value)
-      when "ruby"
+      when :ruby
         Marshal.load(value)
       else
         value
@@ -192,8 +190,8 @@ class Cachetastic::Caches::Base
     # If the expiry time is set to 60 minutes and the expiry_swing time is set to
     # 15 minutes, this method will return a number between 45 minutes and 75 minutes.
     def calculate_expiry_time(expiry) # :doc:
-      exp_swing = adapter.all_options["expiry_swing"]
-      if exp_swing
+      exp_swing = adapter.configuration.retrieve(:expiry_swing, 0)
+      if exp_swing && exp_swing != 0
         swing = rand(exp_swing.to_i)
         case rand(2)
         when 0
@@ -232,7 +230,7 @@ class Cachetastic::Caches::Base
     
     # make sure people can't instaniate this object!
     def new(*args)
-      raise MethodNotImplemented.new("You can not instaniate this class!")
+      raise NoMethodError.new("You can not instaniate this class!")
     end
     
   end
