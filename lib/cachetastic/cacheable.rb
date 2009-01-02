@@ -41,14 +41,16 @@ module Cachetastic
         n = self.name if n == "Class"
         # puts "n: #{n}"
         c_name = "Cachetastic::Cacheable::#{n}Cache"
-        unless Cachetastic::Cacheable.const_defined?("#{n}Cache")
-          puts "we need to create a cache for: #{c_name}"
+        begin
+          return c_name.constantize
+        rescue NameError => e
           eval %{
             class #{c_name} < Cachetastic::Caches::Base
             end
           }
+          return c_name.constantize
         end
-        c_name.constantize
+        
       end
     
       # How much did I want to call this method cache?? It originally was that, but
@@ -170,11 +172,7 @@ module Cachetastic
     # --------------------------
     
     def self.included(klass) # :nodoc:
-      if RUBY_VERSION >= '1.9.1'
-        klass.send!(:include, ClassAndInstanceMethods)
-      else
-        klass.send(:include, ClassAndInstanceMethods)
-      end
+      klass.send(:include, ClassAndInstanceMethods)
       klass.extend(ClassOnlyMethods)
       klass.extend(ClassAndInstanceMethods)
     end
