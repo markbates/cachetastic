@@ -42,7 +42,7 @@ module Cachetastic
         # puts "n: #{n}"
         c_name = "Cachetastic::Cacheable::#{n}Cache"
         unless Cachetastic::Cacheable.const_defined?("#{n}Cache")
-          # puts "we need to create a cache for: #{c_name}"
+          puts "we need to create a cache for: #{c_name}"
           eval %{
             class #{c_name} < Cachetastic::Caches::Base
             end
@@ -170,7 +170,11 @@ module Cachetastic
     # --------------------------
     
     def self.included(klass) # :nodoc:
-      klass.send(:include, ClassAndInstanceMethods)
+      if RUBY_VERSION >= '1.9.1'
+        klass.send!(:include, ClassAndInstanceMethods)
+      else
+        klass.send(:include, ClassAndInstanceMethods)
+      end
       klass.extend(ClassOnlyMethods)
       klass.extend(ClassAndInstanceMethods)
     end
