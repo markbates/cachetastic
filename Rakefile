@@ -10,7 +10,7 @@ require 'rubygems/gem_runner'
 
 @gem_spec = Gem::Specification.new do |s|
   s.name = 'cachetastic'
-  s.version = '2.1.0'
+  s.version = '2.1.1'
   s.summary = "A very simple, yet very powerful caching framework for Ruby."
   s.description = "A very simple, yet very powerful caching framework for Ruby."
   s.author = "markbates"
