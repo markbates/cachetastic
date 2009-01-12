@@ -7,6 +7,7 @@ require 'zlib'
 require 'pp'
 require 'drb'
 require 'configatron'
+require 'mack-facets'
 begin
   require 'memcache'
 rescue Exception => e
