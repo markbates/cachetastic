@@ -41,9 +41,7 @@ class Cachetastic::Adapters::Base
   # Returns true/or falsed based on whether or not the debug setting is set to true in the
   # configuration file. If the config setting is set, then false is returned.
   def debug?
-    ivar_cache(:debug) do
-      configuration.retrieve(:debug, false)
-    end
+    configuration.retrieve(:debug, false)
   end
   
   def stats

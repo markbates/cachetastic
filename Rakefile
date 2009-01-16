@@ -10,7 +10,7 @@ require 'rubygems/gem_runner'
 
 @gem_spec = Gem::Specification.new do |s|
   s.name = 'cachetastic'
-  s.version = '2.1.1'
+  s.version = '2.1.2'
   s.summary = "A very simple, yet very powerful caching framework for Ruby."
   s.description = "A very simple, yet very powerful caching framework for Ruby."
   s.author = "markbates"
@@ -25,8 +25,8 @@ require 'rubygems/gem_runner'
   s.bindir = "bin"
   s.executables << "cachetastic_drb_server"
   #s.default_executable = ""
-  s.add_dependency("configatron")
-  s.add_dependency("mack-facets")
+  s.add_dependency("configatron", '>=2.2.2')
+  # s.add_dependency("mack-facets")
   #s.extensions << ""
   s.extra_rdoc_files = ["README"]
   s.has_rdoc = true
