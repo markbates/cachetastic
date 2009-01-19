@@ -17,11 +17,23 @@ class Person
   
 end
 
+module Me
+  class You
+    include Cachetastic::Cacheable
+  end
+end
+
 class Unknown
   include Cachetastic::Cacheable
 end
 
 class CacheableTest < Test::Unit::TestCase
+  
+  def test_cache_classes_work_with_modules
+    assert !Cachetastic::Cacheable.const_defined?("Me_YouCache")
+    assert Me::You.cache_class == Cachetastic::Cacheable::Me_YouCache
+    assert Cachetastic::Cacheable.const_defined?("Me_YouCache")
+  end
   
   def test_cache_classes_are_auto_genned
     assert !Cachetastic::Cacheable.const_defined?("PersonCache")
