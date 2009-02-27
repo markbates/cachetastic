@@ -63,6 +63,7 @@ require File.join(home, 'rails_extensions/active_record_base')
 require File.join(home, 'rails_extensions/cgi_session_store')
 require File.join(home, 'ruby_extensions/object')
 require File.join(home, 'ruby_extensions/kernel')
+require File.join(home, 'ruby_extensions/string')
 
 configatron.cachetastic_default_options.set_default(:debug, false)
 configatron.cachetastic_default_options.set_default(:adapter, :local_memory)

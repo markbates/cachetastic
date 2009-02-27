@@ -1,7 +1,7 @@
 require "test/unit"
 require File.join(File.dirname(__FILE__), "..", "lib", "cachetastic")
 require 'rubygems'
-require 'mack-facets'
+# require 'mack-facets'
 require 'active_record'
 
 # place common methods, assertions, and other type things in this file so
@@ -45,7 +45,6 @@ end
 
 #---- AR:
 AR_DB = File.join(Dir.pwd, "ar_test.db")
-puts "AR_DB: #{AR_DB}"
 ActiveRecord::Base.establish_connection({:adapter => "sqlite3", :database => AR_DB})
 
 class ArAlbum < ActiveRecord::Base
