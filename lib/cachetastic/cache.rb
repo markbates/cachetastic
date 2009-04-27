@@ -22,11 +22,7 @@ module Cachetastic
       
       def adapter
         unless @adapter && @adapter.valid?
-          adp = self.to_configatron(:cachetastic).adapter
-          if adp.nil?
-            adp = configatron.cachetastic.defaults.adapter
-          end
-          @adapter = adp.new(self)
+          @adapter = Cachetastic::Adapters.build(self)
         end
         @adapter
       end # adapter

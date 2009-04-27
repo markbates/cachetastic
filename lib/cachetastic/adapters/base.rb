@@ -1,5 +1,18 @@
 module Cachetastic
   module Adapters
+    
+    class << self
+      
+      def build(klass)
+        adp = klass.to_configatron(:cachetastic).adapter
+        if adp.nil?
+          adp = configatron.cachetastic.defaults.adapter
+        end
+        adp.new(klass)
+      end
+      
+    end # class << self
+    
     class Base
       
       attr_accessor :klass

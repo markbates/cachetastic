@@ -4,6 +4,24 @@ class CarCache < Cachetastic::Cache
 end
 
 describe Cachetastic::Adapters do
+
+  describe 'build' do
+    
+    it 'should build and a return an Adapter for a Class' do
+      adp = Cachetastic::Adapters.build(CarCache)
+      adp.should_not be_nil
+      adp.should be_kind_of(Cachetastic::Adapters::LocalMemory)
+      adp.klass.should be(CarCache)
+      configatron.temp do
+        configatron.cachetastic.car_cache.adapter = Cachetastic::Adapters::Memcached
+        adp = Cachetastic::Adapters.build(CarCache)
+        adp.should_not be_nil
+        adp.should be_kind_of(Cachetastic::Adapters::Memcached)
+        adp.klass.should be(CarCache)
+      end
+    end
+    
+  end
   
   describe 'Base' do
     
