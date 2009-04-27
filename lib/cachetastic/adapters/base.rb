@@ -31,6 +31,7 @@ module Cachetastic
       end
       
       def marshal(value)
+        return nil if value.nil?
         case self.marshal_method.to_sym
         when :yaml
           return YAML.dump(value)
@@ -42,6 +43,7 @@ module Cachetastic
       end
       
       def unmarshal(value)
+        return nil if value.nil?
         case self.marshal_method.to_sym
         when :yaml
           return YAML.load(value)
@@ -71,7 +73,7 @@ module Cachetastic
       end
       
       def define_accessor(key)
-        eval(%{
+        instance_eval(%{
           def #{key}
             @#{key}
           end
@@ -79,28 +81,6 @@ module Cachetastic
             @#{key} = x
           end
         })        
-      end
-      
-      def handle_store_object(key, val, &block)
-        if val.is_a?(Cachetastic::Cache::StoreObject)
-          if val.expired?
-            self.delete(key)
-            val = nil
-          else
-            val = val.value
-          end
-        end
-
-        case val
-        when Array, Hash
-          val = nil if val.empty?
-        when String
-          val = nil if val.blank?
-        end
-        return val unless val.nil?
-        
-        val = yield if block_given?
-        return val
       end
       
     end # Base

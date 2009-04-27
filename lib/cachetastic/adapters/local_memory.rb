@@ -8,8 +8,7 @@ module Cachetastic
       end
       
       def get(key, &block)
-        val = unmarshal(@_store[key])
-        handle_store_object(key, val, &block)
+        @_store[key]
       end # get
       
       def set(key, value, expiry_time = nil)

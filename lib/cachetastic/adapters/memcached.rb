@@ -3,6 +3,7 @@ module Cachetastic
     class Memcached < Cachetastic::Adapters::Base
       
       def initialize(klass)
+        # puts "initialize: #{klass}"
         define_accessor(:servers)
         define_accessor(:mc_options)
         define_accessor(:delete_delay)
@@ -14,27 +15,15 @@ module Cachetastic
                            :readonly => false,
                            :urlencode => false}
         super
+        connection
       end
       
       def get(key, &block)
-        val = unmarshal(connection.get(transform_key(key), false))
-        # path = file_path(key)
-        # val = nil
-        # if ::File.exists?(path)
-        #   val = unmarshal(::File.read(path))
-        # end
-        # 
-        handle_store_object(key, val, &block)
+        connection.get(transform_key(key), false)
       end # get
       
       def set(key, value, expiry_time = 0)
         connection.set(transform_key(key), marshal(value), calculate_expiry_time(expiry_time), false)
-        # expiry_time = self.default_expiry if expiry_time.nil?
-        # so = Cachetastic::Cache::StoreObject.new(key, value, expiry_time.from_now)
-        # path = file_path(key)
-        # FileUtils.mkdir_p(::File.dirname(path), :verbose => true)
-        # ::File.open(path, 'w') {|f| f.write marshal(so)}
-        # value
       end # set
       
       def delete(key)
@@ -43,6 +32,7 @@ module Cachetastic
       
       def expire_all
         increment_version
+        @_mc_connection = nil
       end # expire_all
       
       def transform_key(key)
@@ -52,15 +42,13 @@ module Cachetastic
       def valid?
         return false if @_mc_connection.nil?
         return false unless @_mc_connection.active?
-        return false if @_ns_version.nil?
-        return @_ns_version == get_version
+        return true
       end
       
       private
       def connection
-        unless @_mc_connection && valid?
+        unless @_mc_connection && valid? && @_ns_version == get_version
           @_mc_connection = MemCache.new(self.servers, self.mc_options.merge(:namespace => namespace))
-          @_ns_version = get_version
         end
         @_mc_connection
       end
@@ -89,8 +77,8 @@ module Cachetastic
       end
       
       def namespace
-        v = get_version
-        return "#{self.klass.name}.#{v}"
+        @_ns_version = get_version
+        "#{self.klass.name}.#{@_ns_version}"
       end
       
     end # Memcached

@@ -4,25 +4,22 @@ module Cachetastic
       
       def initialize(klass)
         define_accessor(:storage_path)
-        self.storage_path = ::File.join(FileUtils.pwd, 'cachetastic', klass.name.underscore)
+        self.storage_path = ::File.join(FileUtils.pwd, 'cachetastic')
         super
         self.marshal_method = :yaml if self.marshal_method == :none
+        @_file_paths = {}
       end
       
       def get(key, &block)
         path = file_path(key)
         val = nil
-        if ::File.exists?(path)
-          val = unmarshal(::File.read(path))
-        end
-        
-        handle_store_object(key, val, &block)
+        val = ::File.read(path) if ::File.exists?(path)
+        return val
       end # get
       
       def set(key, value, expiry_time = nil)
         so = Cachetastic::Cache::StoreObject.new(key, value, calculate_expiry_time(expiry_time).from_now)
         path = file_path(key)
-        FileUtils.mkdir_p(::File.dirname(path))
         ::File.open(path, 'w') {|f| f.write marshal(so)}
         value
       end # set
@@ -32,10 +29,8 @@ module Cachetastic
       end # delete
       
       def expire_all
-        begin
-          FileUtils.rm_r(self.storage_path)
-        rescue Errno::ENOENT => e
-        end
+        @_file_paths = {}
+        ::FileUtils.rm_rf(::File.join(self.storage_path, klass.name.underscore))
       end # expire_all
       
       def transform_key(key)
@@ -43,7 +38,13 @@ module Cachetastic
       end
       
       def file_path(key)
-        ::File.join(self.storage_path, transform_key(key).scan(/(.{1,3})/).flatten, 'cache.txt')
+        path = @_file_paths[key]
+        if path.nil?
+          path = ::File.join(self.storage_path, klass.name.underscore, transform_key(key).scan(/(.{1,4})/).flatten, 'cache.data')
+          @_file_paths[key] = path
+          FileUtils.mkdir_p(::File.dirname(path))
+        end
+        return path
       end
       
     end # File
