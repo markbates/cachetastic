@@ -1,5 +1,5 @@
 module Cachetastic
-  module Cache
+  class Cache
     
     class StoreObject # :nodoc:
       attr_accessor :expires_at

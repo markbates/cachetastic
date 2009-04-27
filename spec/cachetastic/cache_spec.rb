@@ -1,7 +1,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-class SimpleCache
-  include Cachetastic::Cache
+class SimpleCache < Cachetastic::Cache
 end
 
 describe Cachetastic::Cache do

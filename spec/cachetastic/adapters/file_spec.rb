@@ -1,7 +1,6 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
-class AnimalCache
-  include Cachetastic::Cache
+class AnimalCache < Cachetastic::Cache
 end
 
 describe Cachetastic::Adapters::File do

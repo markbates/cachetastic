@@ -1,7 +1,6 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
-class CarCache
-  include Cachetastic::Cache
+class CarCache < Cachetastic::Cache
 end
 
 describe Cachetastic::Adapters do

@@ -1,11 +1,7 @@
 module Cachetastic
-  module Cache
+  class Cache
     
-    def self.included(base)
-      base.extend(Cachetastic::Cache::ClassMethods)
-    end
-    
-    module ClassMethods
+    class << self
       
       def get(key, &block)
         val = self.adapter.get(key, &block)
@@ -62,7 +58,7 @@ module Cachetastic
         return val
       end
       
-    end # ClassMethods
+    end # class << self
     
   end # Cache
 end # Cachetastic
