@@ -56,6 +56,21 @@ Spec::Rake::SpecTask.new(:default) do |t|
   t.spec_files = Dir.glob('spec/**/*_spec.rb')
 end
 
+desc 'Run Rcov'
+task :rcov do
+  unless PLATFORM['i386-mswin32'] 
+    rcov = "rcov --sort coverage --rails --aggregate coverage.data " + 
+    "--text-summary -Ilib -T -x gems/*,rcov*,lib/tasks/*,Rakefile,spec/*" 
+  else 
+    rcov = "rcov.cmd --sort coverage --rails --aggregate coverage.data " + 
+    "--text-summary -Ilib -T" 
+  end
+  system rcov
+  unless PLATFORM['i386-mswin32'] 
+    system "open coverage/index.html"
+  end
+end
+
 desc 'regenerate the gemspec'
 task :gemspec do
   @gem_spec.version = "#{@gem_spec.version}.#{Time.now.strftime('%Y%m%d%H%M%S')}"
