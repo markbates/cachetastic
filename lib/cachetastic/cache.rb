@@ -41,11 +41,10 @@ module Cachetastic
             val = val.value
           end
         end
-
-        case val
-        when Array, Hash
+        
+        if val.respond_to?(:empty?)
           val = nil if val.empty?
-        when String
+        elsif val.respond_to?(:blank?)
           val = nil if val.blank?
         end
         return val unless val.nil?
