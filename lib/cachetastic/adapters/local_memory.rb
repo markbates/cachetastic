@@ -23,6 +23,7 @@ module Cachetastic
       
       def expire_all
         @_store = {}
+        return nil
       end # expire_all
       
     end # LocalMemory

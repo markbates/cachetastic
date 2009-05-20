@@ -33,6 +33,7 @@ module Cachetastic
       def expire_all
         increment_version
         @_mc_connection = nil
+        return nil
       end # expire_all
       
       def transform_key(key)

@@ -32,4 +32,12 @@ describe Cachetastic::Cache do
     
   end
   
+  describe 'cache_klass' do
+    
+    it 'should return the class constant by default' do
+      SimpleCache.cache_klass.should == SimpleCache
+    end
+    
+  end
+  
 end

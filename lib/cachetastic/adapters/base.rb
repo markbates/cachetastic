@@ -43,6 +43,11 @@ module Cachetastic
         true
       end
       
+      def debug?
+        return self.debug if self.respond_to?(:debug)
+        return false
+      end
+      
       def marshal(value)
         return nil if value.nil?
         case self.marshal_method.to_sym

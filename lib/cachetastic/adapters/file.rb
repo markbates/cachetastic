@@ -31,6 +31,7 @@ module Cachetastic
       def expire_all
         @_file_paths = {}
         ::FileUtils.rm_rf(::File.join(self.storage_path, klass.name.underscore))
+        return nil
       end # expire_all
       
       def transform_key(key)
