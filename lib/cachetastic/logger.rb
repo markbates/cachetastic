@@ -6,7 +6,7 @@ module Cachetastic
     # attr_accessor :cache_name
     attr_accessor :loggers
   
-    def initialize(loggers)
+    def initialize(*loggers)
       @loggers = [loggers].flatten
     end
   
