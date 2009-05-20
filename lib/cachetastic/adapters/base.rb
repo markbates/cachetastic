@@ -1,76 +1,106 @@
-# This class is the interface used to develop adapters for stores.
-# Stores are where the data is actually held. These could be local memory,
-# memcached, a database, the file system, etc...
-# If you implement this API, then you should be able to plug in different
-# stores for your caches without having to change any of your code.
-# 
-# === Methods that need to be implemented:
-# * setup - used to setup the implementation of the adapter.
-# * set(key, object, expiry) - sets an object into the store using the given key and the expiry time.
-# * get(key) - returns an object from the store for a given key.
-# * delete(key, delay) - deletes an object from the store for a given key. If the store supports it, a delay can be used.
-# * expire_all - expires all objects in the store for a given cache.
-# * stats - returns statistics for the store.
-# * valid? - used to test whether or not the store is still valid. If this returns false a new instance of the adapter is created by Cachetastic::Connection
-class Cachetastic::Adapters::Base
-  
-  # attr_reader :all_options
-  # attr_reader :store_options
-  # attr_reader :servers
-  attr_reader :name
-  # attr_reader :logging
-  attr_reader :logger
-  
-  def initialize(name)
-    @name = name
-    @logger = Cachetastic::Logger.new(configuration.retrieve(:logger, ::Logger.new(STDOUT)))
-    setup
-    if self.debug?
-      self.logger.debug(self.name, :self, self.inspect)
-    end
-  end
-  
-  needs_method :setup
-  needs_method :set
-  needs_method :get
-  needs_method :delete
-  needs_method :expire_all
-  needs_method :stats
-  needs_method :valid?
-  
-  # Returns true/or falsed based on whether or not the debug setting is set to true in the
-  # configuration file. If the config setting is set, then false is returned.
-  def debug?
-    configuration.retrieve(:debug, false)
-  end
-  
-  def stats
-    cache_name = self.name.to_s.camelize
-    adapter_type = self.class.to_s.gsub('Cachetastic::Adapters::', '')
-    s = "Cache: #{cache_name}\nStore Type: #{adapter_type}\n"
-    if self.servers
-      servers = self.servers.join(',')
-      s += "Servers: #{servers}"
-    end
-    puts s
-  end
-  
-  def configuration
-    Cachetastic::Adapters::Base.configuration(self.name)
-  end
-  
-  class << self
-    # Returns either the options
-    # Options need to be specified in configatrion as the methodized name of the cache with
-    # _options attached at the end.
-    # Examples:
-    #   Cachetastic::Caches::PageCache # => cachetastic_caches_page_cache_options
-    #   MyAwesomeCache # => my_awesome_cache_options
-    def configuration(name)
-      name = "#{name}_options"
-      conf = configatron.retrieve(name, configatron.cachetastic_default_options)
-      conf
-    end
-  end
-  
-end
+module Cachetastic
+  module Adapters
+    
+    class << self
+      
+      def build(klass)
+        adp = klass.to_configatron(:cachetastic).adapter
+        if adp.nil?
+          adp = configatron.cachetastic.defaults.adapter
+        end
+        adp.new(klass)
+      end
+      
+    end # class << self
+    
+    class Base
+      
+      attr_accessor :klass
+      
+      def initialize(klass)
+        self.klass = klass
+        configatron.cachetastic.defaults.configatron_keys.each do |key|
+          define_accessor(key)
+          self.send("#{key}=", configatron.cachetastic.defaults.send(key))
+        end
+        klass.to_configatron(:cachetastic).configatron_keys.each do |key|
+          define_accessor(key)
+          self.send("#{key}=", klass.to_configatron(:cachetastic).send(key))
+        end
+      end
+      
+      # Allows an adapter to transform the key
+      # to a safe representation for it's backend.
+      # For example, the key: '$*...123()%~q' is not a 
+      # key for the file system, so the 
+      # Cachetastic::Adapters::File class should override
+      # this to make it safe for the file system.
+      def transform_key(key)
+        key
+      end
+      
+      def valid?
+        true
+      end
+      
+      def debug?
+        return self.debug if self.respond_to?(:debug)
+        return false
+      end
+      
+      def marshal(value)
+        return nil if value.nil?
+        case self.marshal_method.to_sym
+        when :yaml
+          return YAML.dump(value)
+        when :ruby
+          return Marshal.dump(value)
+        else
+          return value
+        end
+      end
+      
+      def unmarshal(value)
+        return nil if value.nil?
+        case self.marshal_method.to_sym
+        when :yaml
+          return YAML.load(value)
+        when :ruby
+          return Marshal.load(value)
+        else
+          return value
+        end
+      end
+      
+      private
+      # If the expiry time is set to 60 minutes and the expiry_swing time is set to
+      # 15 minutes, this method will return a number between 45 minutes and 75 minutes.
+      def calculate_expiry_time(expiry_time) # :doc:
+        expiry_time = self.default_expiry if expiry_time.nil?
+        exp_swing = self.expiry_swing
+        if exp_swing && exp_swing != 0
+          swing = rand(exp_swing.to_i)
+          case rand(2)
+          when 0
+            expiry_time = (expiry_time.to_i + swing)
+          when 1
+            expiry_time = (expiry_time.to_i - swing)
+          end
+        end
+        expiry_time
+      end
+      
+      def define_accessor(key)
+        instance_eval(%{
+          def #{key}
+            @#{key}
+          end
+          def #{key}=(x)
+            @#{key} = x
+          end
+        })        
+      end
+      
+    end # Base
+  end # Adapters
+end # Cachetastic

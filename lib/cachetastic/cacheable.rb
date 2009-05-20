@@ -39,13 +39,17 @@ module Cachetastic
       def cache_class
         n = self.class.name
         n = self.name if n == "Class"
-        n.gsub!('::', '_')
-        c_name = "Cachetastic::Cacheable::#{n}Cache"
+        c_name = "Cachetastic::Cacheable::#{n.gsub('::', '_')}Cache"
         begin
           return c_name.constantize
         rescue NameError => e
           eval %{
-            class #{c_name} < Cachetastic::Caches::Base
+            class #{c_name} < Cachetastic::Cache
+              
+              def self.cache_klass
+                #{n}
+              end
+              
             end
           }
           return c_name.constantize

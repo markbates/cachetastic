@@ -1,49 +1,53 @@
-# This adapter uses the file system as it's backing.
-# The configuration for this should look something like this:
-#  my_awesome_cache_options:
-#    debug: false
-#    adapter: file
-#    marshall_method: none
-#    default_expiry: <%= 24.hours %>
-#    store_options:  
-#      dir: /usr/local/caches/
-#    logging:
-#      logger_1:
-#        type: file
-#        file: log/file_store_cache.log
-class Cachetastic::Adapters::File < Cachetastic::Adapters::FileBase
-  
-  def get(key)
-    full_path = full_path_from_dir(get_key_directoy(key, false))
-    return nil unless File.exists?(full_path)
-    so = YAML::load(File.open(full_path).read)
-    if so
-      if so.invalid?
-        self.delete(key)
+module Cachetastic
+  module Adapters
+    class File < Cachetastic::Adapters::Base
+      
+      def initialize(klass)
+        define_accessor(:storage_path)
+        self.storage_path = ::File.join(FileUtils.pwd, 'cachetastic')
+        super
+        self.marshal_method = :yaml if self.marshal_method == :none
+        @_file_paths = {}
+      end
+      
+      def get(key, &block)
+        path = file_path(key)
+        val = nil
+        val = ::File.read(path) if ::File.exists?(path)
+        return val
+      end # get
+      
+      def set(key, value, expiry_time = nil)
+        so = Cachetastic::Cache::StoreObject.new(key, value, calculate_expiry_time(expiry_time).from_now)
+        path = file_path(key)
+        ::File.open(path, 'w') {|f| f.write marshal(so)}
+        value
+      end # set
+      
+      def delete(key)
+        FileUtils.rm(file_path(key))
+      end # delete
+      
+      def expire_all
+        @_file_paths = {}
+        ::FileUtils.rm_rf(::File.join(self.storage_path, klass.name.underscore))
         return nil
+      end # expire_all
+      
+      def transform_key(key)
+        key.to_s.hexdigest
       end
-      if so.value.is_a?(YAML::Object)
-        require so.value.class.underscore
-        so = YAML::load(File.open(full_path).read)
+      
+      def file_path(key)
+        path = @_file_paths[key]
+        if path.nil?
+          path = ::File.join(self.storage_path, klass.name.underscore, transform_key(key).scan(/(.{1,4})/).flatten, 'cache.data')
+          @_file_paths[key] = path
+          FileUtils.mkdir_p(::File.dirname(path))
+        end
+        return path
       end
-      return so.value
-    end
-    return nil
-  end
-  
-  def set(key, value, expiry = 0)
-    so = Cachetastic::Adapters::StoreObject.new(key.to_s, value, expiry)
-    File.open(full_path_from_key(key), "w") do |f|
-      f.puts YAML.dump(so)
-    end
-  end
-  
-  protected
-  def store_file_name
-    return STORE_FILE_NAME
-  end
-  
-  private
-  STORE_FILE_NAME = "cache.yml"
-  
-end
+      
+    end # File
+  end # Adapters
+end # Cachetastic

@@ -7,34 +7,38 @@ require 'find'
 require 'rubyforge'
 require 'rubygems'
 require 'rubygems/gem_runner'
+require 'spec'
+require 'spec/rake/spectask'
 
 @gem_spec = Gem::Specification.new do |s|
-  s.name = 'cachetastic'
-  s.version = '2.1.4'
+  s.name = "cachetastic-three"
+  s.version = "2.9.9"
   s.summary = "A very simple, yet very powerful caching framework for Ruby."
   s.description = "A very simple, yet very powerful caching framework for Ruby."
-  s.author = "markbates"
+  s.author = "Mark Bates"
   s.email = "mark@mackframework.com"
   s.homepage = "http://www.mackframework.com"
-
-  s.test_files = FileList['test/**/*']
-
-  s.files = FileList['lib/**/*.rb', 'README', 'doc/**/*.*', 'bin/**/*.*']
-  s.require_paths << 'lib'
-
-  s.bindir = "bin"
-  s.executables << "cachetastic_drb_server"
-  #s.default_executable = ""
-  s.add_dependency("configatron", '>=2.2.2')
-  # s.add_dependency("mack-facets")
-  #s.extensions << ""
+  
+  s.files = FileList['lib/**/*.*', 'README', 'doc/**/*.*', 'bin/**/*.*']
+  s.require_paths = ['lib']
   s.extra_rdoc_files = ["README"]
   s.has_rdoc = true
+  s.rubyforge_project = "cachetastic"
+  
+  s.add_dependency('configatron', '>=2.3.0')
+  s.add_dependency('memcache-client', '>=1.5.0')
+  s.add_dependency('activesupport', '>=2.2.2')
+  # s.test_files = FileList['spec/**/*']
+  #s.bindir = "bin"
+  #s.executables << "cachetastic"
+  #s.add_dependency("", "")
+  #s.add_dependency("", "")
+  #s.extensions << ""
+  #s.required_ruby_version = ">= 1.8.6"
+  #s.default_executable = ""
   #s.platform = "Gem::Platform::Ruby"
-  #s.required_ruby_version = ">= 1.8.5"
   #s.requirements << "An ice cold beer."
   #s.requirements << "Some free time!"
-  s.rubyforge_project = "magrathea"
 end
 
 # rake package
@@ -45,17 +49,38 @@ Rake::GemPackageTask.new(@gem_spec) do |pkg|
 end
 
 # rake
-desc "Run test code"
-Rake::TestTask.new(:default) do |t|
-  t.libs << "test"
-  t.pattern = 'test/**/*_test.rb'
-  t.verbose = true
+desc 'Run specifications'
+Spec::Rake::SpecTask.new(:default) do |t|
+  opts = File.join(File.dirname(__FILE__), "spec", 'spec.opts')
+  t.spec_opts << '--options' << opts if File.exists?(opts)
+  t.spec_files = Dir.glob('spec/**/*_spec.rb')
+end
+
+desc 'Run Rcov'
+task :rcov do
+  unless PLATFORM['i386-mswin32'] 
+    rcov = "rcov --sort coverage --rails --aggregate coverage.data " + 
+    "--text-summary -Ilib -T -x gems/*,rcov*,lib/tasks/*,Rakefile,spec/*" 
+  else 
+    rcov = "rcov.cmd --sort coverage --rails --aggregate coverage.data " + 
+    "--text-summary -Ilib -T" 
+  end
+  system rcov
+  unless PLATFORM['i386-mswin32'] 
+    system "open coverage/index.html"
+  end
+end
+
+desc 'regenerate the gemspec'
+task :gemspec do
+  @gem_spec.version = "#{@gem_spec.version}.#{Time.now.strftime('%Y%m%d%H%M%S')}"
+  File.open(File.join(File.dirname(__FILE__), 'cachetastic.gemspec'), 'w') {|f| f.puts @gem_spec.to_ruby}
 end
 
 desc "Install the gem"
 task :install => [:package] do |t|
   sudo = ENV['SUDOLESS'] == 'true' || RUBY_PLATFORM =~ /win32|cygwin/ ? '' : 'sudo'
-  puts `#{sudo} gem install #{File.join("pkg", @gem_spec.name)}-#{@gem_spec.version}.gem --no-update-sources`
+  puts `#{sudo} gem install #{File.join("pkg", @gem_spec.name)}-#{@gem_spec.version}.gem --no-update-sources --no-ri --no-rdoc`
 end
 
 desc "Release the gem"
