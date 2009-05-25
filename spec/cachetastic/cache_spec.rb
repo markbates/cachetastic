@@ -40,4 +40,59 @@ describe Cachetastic::Cache do
     
   end
   
+  
+  describe 'logging' do
+    
+    before(:each) do
+      Time.stub!(:now).and_return(Time.at(0))
+      @logger = mock(Logger.new(STDOUT))
+      configatron.cachetastic.simple_cache.debug = true
+    end
+    
+    describe 'get' do
+      
+      it 'should log a get call' do
+        SimpleCache.logger.stub!(:debug)
+        SimpleCache.logger.should_receive(:debug).with(:starting, :get, 'SimpleCache', 1)
+        SimpleCache.logger.should_receive(:debug).with(:finished, :get, 'SimpleCache', 1, 0.0, '')
+        SimpleCache.get(1)
+      end
+      
+    end
+    
+    describe 'set' do
+
+      it 'should log a set call' do
+        SimpleCache.logger.stub!(:debug)
+        SimpleCache.logger.should_receive(:debug).with(:starting, :set, 'SimpleCache', 1)
+        SimpleCache.logger.should_receive(:debug).with(:finished, :set, 'SimpleCache', 1, 0.0, "[String]\t[Size = 3]\t\"foo\"")
+        SimpleCache.set(1, 'foo')
+      end
+
+    end
+    
+    describe 'delete' do
+      
+      it 'should log a delete call' do
+        SimpleCache.logger.stub!(:debug)
+        SimpleCache.logger.should_receive(:debug).with(:starting, :delete, 'SimpleCache', 1)
+        SimpleCache.logger.should_receive(:debug).with(:finished, :delete, 'SimpleCache', 1, 0.0, '')
+        SimpleCache.delete(1)
+      end
+      
+    end
+    
+    describe 'expire_all' do
+      
+      it 'should log an expire_all' do
+        SimpleCache.logger.stub!(:debug)
+        SimpleCache.logger.should_receive(:debug).with(:starting, :expire_all, 'SimpleCache', nil)
+        SimpleCache.logger.should_receive(:debug).with(:finished, :expire_all, 'SimpleCache', nil, 0.0, '')
+        SimpleCache.expire_all
+      end
+      
+    end
+    
+  end
+  
 end

@@ -19,12 +19,14 @@ module Cachetastic
       def delete(key)
         do_with_logging(:delete, key) do
           self.adapter.delete(key)
+          nil
         end
       end # delete
       
       def expire_all
         do_with_logging(:expire_all, nil) do
           self.adapter.expire_all
+          nil
         end
       end # expire_all
       

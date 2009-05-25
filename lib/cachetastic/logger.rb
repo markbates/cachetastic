@@ -26,6 +26,7 @@ module Cachetastic
         exs.each do |ex|
           lm << "\n#{ex.message}\n" << ex.backtrace.join("\n")
         end
+        # puts "lm: #{lm}"
         self.loggers.each do |log|
           log.send(level, lm)
         end
