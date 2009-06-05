@@ -87,7 +87,7 @@ module Cachetastic
       #   Person.cacher("say_hi") {"Hi There"} # => "Hi There"
       #   Person.get_from_cache("say_hi") # => "Hi There"
       #   Cachetastic::Cacheable::PersonCache.get("say_hi") # => "Hi There"
-      def cacher(key, expiry = 0)
+      def cacher(key, expiry = nil)
         cache_class.get(key) do
           if block_given?
             res = yield
@@ -118,6 +118,7 @@ module Cachetastic
       def expire_all
         cache_class.expire_all
       end
+      
     end
     
     # --------------------------

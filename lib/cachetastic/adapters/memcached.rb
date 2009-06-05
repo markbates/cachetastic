@@ -85,9 +85,3 @@ module Cachetastic
     end # Memcached
   end # Adapters
 end # Cachetastic
-
-#      c_threshold: 10_000
-#      compression: true
-#      debug: false
-#      readonly: false
-#      urlencode: false
