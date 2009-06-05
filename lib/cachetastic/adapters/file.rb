@@ -17,8 +17,8 @@ module Cachetastic
         return val
       end # get
       
-      def set(key, value, expiry_time = nil)
-        so = Cachetastic::Cache::StoreObject.new(key, value, calculate_expiry_time(expiry_time).from_now)
+      def set(key, value, expiry_time = configatron.cachetastic.defaults.default_expiry)
+        so = Cachetastic::Cache::StoreObject.new(key, value, expiry_time.from_now)
         path = file_path(key)
         ::File.open(path, 'w') {|f| f.write marshal(so)}
         value

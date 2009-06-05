@@ -12,7 +12,7 @@ module Cachetastic
       
       def set(key, value, expiry_time = nil)
         do_with_logging(:set, key) do
-          self.adapter.set(key, value, expiry_time)
+          self.adapter.set(key, value, calculate_expiry_time(expiry_time))
         end
       end # set
       
@@ -53,6 +53,23 @@ module Cachetastic
       end
       
       private
+      # If the expiry time is set to 60 minutes and the expiry_swing time is set to
+      # 15 minutes, this method will return a number between 45 minutes and 75 minutes.
+      def calculate_expiry_time(expiry_time) # :doc:
+        expiry_time = self.adapter.default_expiry if expiry_time.nil?
+        exp_swing = self.adapter.expiry_swing
+        if exp_swing && exp_swing != 0
+          swing = rand(exp_swing.to_i)
+          case rand(2)
+          when 0
+            expiry_time = (expiry_time.to_i + swing)
+          when 1
+            expiry_time = (expiry_time.to_i - swing)
+          end
+        end
+        expiry_time
+      end
+      
       def handle_store_object(key, val, &block)
         if val.is_a?(Cachetastic::Cache::StoreObject)
           if val.expired?

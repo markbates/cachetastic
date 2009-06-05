@@ -40,6 +40,26 @@ describe Cachetastic::Cache do
     
   end
   
+  describe 'calculate_expiry_time' do
+    
+    it 'should properly +/- swing to the expiry time' do
+      configatron.temp do
+        configatron.cachetastic.defaults.expiry_swing = 15
+        configatron.cachetastic.defaults.default_expiry = 60
+        SimpleCache.class_eval do
+          class << self
+            public :calculate_expiry_time
+          end
+        end
+        10.times do
+          SimpleCache.calculate_expiry_time(60).should >= 45
+          SimpleCache.calculate_expiry_time(60).should <= 75
+        end
+      end
+    end
+    
+  end
+  
   
   describe 'logging' do
     

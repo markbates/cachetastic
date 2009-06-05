@@ -22,8 +22,8 @@ module Cachetastic
         connection.get(transform_key(key), false)
       end # get
       
-      def set(key, value, expiry_time = 0)
-        connection.set(transform_key(key), marshal(value), calculate_expiry_time(expiry_time), false)
+      def set(key, value, expiry_time = configatron.cachetastic.defaults.default_expiry)
+        connection.set(transform_key(key), marshal(value), expiry_time, false)
       end # set
       
       def delete(key)

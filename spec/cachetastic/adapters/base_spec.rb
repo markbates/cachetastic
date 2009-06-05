@@ -90,23 +90,6 @@ describe Cachetastic::Adapters do
       
     end
     
-    describe 'calculate_expiry_time' do
-      
-      it 'should properly +/- swing to the expiry time' do
-        configatron.temp do
-          configatron.cachetastic.defaults.expiry_swing = 15
-          configatron.cachetastic.defaults.default_expiry = 60
-          Cachetastic::Adapters::Base.send(:public, :calculate_expiry_time)
-          adapter = Cachetastic::Adapters::Base.new(CarCache)
-          10.times do
-            adapter.calculate_expiry_time(60).should >= 45
-            adapter.calculate_expiry_time(60).should <= 75
-          end
-        end
-      end
-      
-    end
-    
   end
   
   ['LocalMemory', 'File', 'Memcached'].each do |adapter|
