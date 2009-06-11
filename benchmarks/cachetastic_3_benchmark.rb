@@ -9,16 +9,15 @@ val = %{
 require File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'cachetastic'))
 require 'benchmark'
 
-class PerformanceTestCache
-  include Cachetastic::Cache
+class PerformanceTestCache < Cachetastic::Cache
 end
 
 times_to_run = 1000
 results = {}
 
-# [Cachetastic::Adapters::LocalMemory, Cachetastic::Adapters::Memcached, Cachetastic::Adapters::File].each do |adapter|
-[Cachetastic::Adapters::File].each do |adapter|
-# [Cachetastic::Adapters::Memcached].each do |adapter|
+#[Cachetastic::Adapters::LocalMemory, Cachetastic::Adapters::Memcached, Cachetastic::Adapters::File].each do |adapter|
+# [Cachetastic::Adapters::File].each do |adapter|
+[Cachetastic::Adapters::Memcached].each do |adapter|
   puts "Starting benchmark for: #{adapter}:"
   configatron.cachetastic.defaults.adapter = adapter
   if adapter == Cachetastic::Adapters::File

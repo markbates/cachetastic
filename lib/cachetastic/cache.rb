@@ -1,21 +1,65 @@
-module Cachetastic
+module Cachetastic # :nodoc:
+  # When creating a new 'Cache' this class should be extended.
+  # Once extended you'll only need to override just the methods
+  # that are different for your cache.
+  #   class MyAwesomeCache < Cachetastic::Cache
+  #   end
+  # 
+  #   MyAwesomeCache.set(1, "One")
+  #   MyAwesomeCache.get(1) # => "One"
+  #   MyAwesomeCache.update(1, "One!!")
+  #   MyAwesomeCache.get(1) # => "One!!"
+  #   MyAwesomeCache.delete(1)
+  #   MyAwesomeCache.get(1) # => nil
+  # 
+  #   class MyAwesomeCache < Cachetastic::Cache
+  #     class << self
+  #       def get(key)
+  #         super(key) do
+  #           set(key, key * 10)
+  #         end
+  #       end
+  #     end
+  #   end
+  # 
+  #   MyAwesomeCache.set(1, "One")
+  #   MyAwesomeCache.get(1) # => "One"
+  #   MyAwesomeCache.delete(1)
+  #   MyAwesomeCache.get(1) # => 10
   class Cache
     
+    # everything is done at the class level. there won't be any 'instances of it'
+    # using class << self means we don't have to prefix each method with 'self.'
     class << self
       
+      # Returns an object from the cache for a given key.
+      # If the object comes back as nil and a block is given
+      # that block will be run and the results of the block
+      # will be returned. This can be used to JIT caches, just make
+      # sure in the block to call the set method because the
+      # results of the block are not automatically cached.
       def get(key, &block)
         do_with_logging(:get, key) do
-          val = self.adapter.get(key, &block)
+          val = self.adapter.get(key)
           handle_store_object(key, adapter.unmarshal(val), &block)
         end
       end # get
       
+      # Set a particular object info the cache for the given key.
+      # 
+      # An optional third parameter sets the expiry time for the object in the cache.
+      # If no expiry_time is passed in then the default expiry_time that has been configured
+      # will be used.
+      # 
+      # If there is an the expiry_swing setting is configured it will be +/- to the
+      # expiry time.
       def set(key, value, expiry_time = nil)
         do_with_logging(:set, key) do
           self.adapter.set(key, value, calculate_expiry_time(expiry_time))
         end
       end # set
       
+      # Deletes an object from the cache.
       def delete(key)
         do_with_logging(:delete, key) do
           self.adapter.delete(key)
@@ -23,6 +67,7 @@ module Cachetastic
         end
       end # delete
       
+      # Expires all objects for this cache.
       def expire_all
         do_with_logging(:expire_all, nil) do
           self.adapter.expire_all
@@ -30,6 +75,7 @@ module Cachetastic
         end
       end # expire_all
       
+      # Returns the underlying Cachetastic::Adapters::Base for this cache.
       def adapter
         unless @_adapter && @_adapter.valid?
           @_adapter = Cachetastic::Adapters.build(cache_klass)
@@ -37,14 +83,17 @@ module Cachetastic
         @_adapter
       end # adapter
       
+      # Clears the adapter so it can be redefined. This is useful if you have
+      # reconfigured the cache to use a different adapater, or different settings.
       def clear_adapter!
         @_adapter = nil
       end
       
-      def cache_klass
+      def cache_klass # :nodoc:
         self
       end
       
+      # Returns the Cachetastic::Logger for this cache.
       def logger
         unless @_logger
           @_logger = Cachetastic::Logger.new(adapter.logger)

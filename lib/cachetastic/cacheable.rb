@@ -1,4 +1,4 @@
-module Cachetastic
+module Cachetastic # :nodoc:
   # Include this module into an Object to achieve simplistic Object level caching.
   # 
   # Example:
@@ -21,21 +21,23 @@ module Cachetastic
   module Cacheable
     
     module ClassAndInstanceMethods
-      # Returns the Cachetastic::Caches::Base object associated with the object.
+      # Returns the Cachetastic::Cache object associated with the object.
       # If a cache hasn't been defined the one will be created on the fly.
       # The cache for the object is expected to be defined as:
       # Cachetastic::Cacheable::{CLASS_NAME_HERE}Cache
       # 
-      # Example:
+      # Examples:
       #   class Person
       #     include Cachetastic::Cacheable
-      #     attr_accessor :name
-      #     def cachetastic_key
-      #       self.name
-      #     end
       #   end
       # 
       #  Person.cache_class # => Cachetastic::Cacheable::PersonCache
+      # 
+      #   class Admin::Person
+      #     include Cachetastic::Cacheable
+      #   end
+      # 
+      #  Admin::Person.cache_class # => Cachetastic::Cacheable::Admin_PersonCache
       def cache_class
         n = self.class.name
         n = self.name if n == "Class"
@@ -66,10 +68,7 @@ module Cachetastic
       # Example:
       #   class Person
       #     include Cachetastic::Cacheable
-      #     attr_accessor :name
-      #     def cachetastic_key
-      #       self.name
-      #     end
+      # 
       #     def always_the_same(x,y)
       #       cacher("always_the_same") do
       #         x + y

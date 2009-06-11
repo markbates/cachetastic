@@ -10,14 +10,14 @@ gem 'cachetastic', '2.1.4'
 require 'cachetastic'
 require 'benchmark'
 
-class PerformanceTestCache < Cachetastic::Caches::Base
+class PerformanceTestCache < Cachetastic::Caches::Base # :nodoc:
 end
 
 times_to_run = 1000
 results = {}
 
-# [:local_memory, :file, :memcache].each do |adapter|
-[:memcache].each do |adapter|
+[:local_memory, :file, :memcache].each do |adapter|
+# [:memcache].each do |adapter|
   puts "Starting benchmark for: #{adapter}:"
   configatron.cachetastic_default_options.adapter = adapter
   logger = ::Logger.new(STDOUT)
@@ -58,3 +58,6 @@ end
 # file:         100.953929901123  (avg. 0.100953929901123)
 # local_memory: 20.7526040077209  (avg. 0.0207526040077209)
 # memcache:     59.0524849891663  (avg. 0.0590524849891663)
+# local_memory: 20.2518169879913 (avg. 0.0202518169879913)
+# memcache: 82.2444090843201 (avg. 0.0822444090843201)
+# file: 95.6928708553314 (avg. 0.0956928708553314)

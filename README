@@ -1,65 +1,79 @@
-=Configuration:
+=What is Cachetastic?
+Cachetastic is an incredibly easy to use and administer caching framework. Just because it is easy to use, does not mean that
+it is light with features. Cachetastic allows you to create classes that extend <tt>Cachetastic::Cache</tt>, configure them
+each individually, and much more.
 
-    # this will dump into the log, configuration info for each cache, as well as the .inspect
-    # for each object returned from the cache
-    configatron.cachetastic_default_options.debug = false
+Unlike other systems each cache in your system can use different backends via the use of adapters that get assigned to each
+cache, and globally. You can define different expiration times, loggers, marshal methods, and more! And again, you can choose to 
+define these settings globally, or for each cache!
 
-    # this is the type of file store to be used for this cache.
-    # more adapters can be developed and plugged in as desired
-    configatron.cachetastic_default_options.adapter = :local_memory # local_memory | memcache | file | drb | html_file (default: local_memory)
+Adapters are easy to write, so if the built in adapters don't float your boat, you can easily knock one off in short order.
 
-    # this will marshall objects into and out of the store.
-    configatron.cachetastic_default_options.marshall_method = :none # none | yaml | ruby (default: none)
+==Configuration:
+Configuration of Cachetastic is done using the Configatron gem. I would recommend reading the documentation on it first, http://configatron.mackframework.com, before continuing.
 
-    # this sets how long objects will live in the cache before they are auto expired.
-    configatron.cachetastic_default_options.default_expiry = 86400 # time in seconds (default: 24 hours)
+All configuration settings hang off of the <tt>cachetastic</tt> namespace on <tt>configatron</tt>. The default settings
+all hang off the <tt>defaults</tt> namespace on the <tt>cachetastic</tt> namespace, as shown below:
 
-    # when setting objects into the cache the expiry_swing is +/- to the expiry time.
-    # example: if the expiry time is 1 hour, and the swing is 15 minutes,
-    # objects will go into the cache with an expiry time sometime between 45 mins and 75 mins.
-    configatron.cachetastic_default_options.expiry_swing = 60 * 15 # time in seconds (default: 0)
+  # This will write detailed information to the logger.
+  configatron.cachetastic.defaults.debug = false
 
-    # these options get passed on directly to the store.
-    # listed below are options for memcache:
-    configatron.cachetastic_default_options.store_options.c_threshold = "10_000"
-    configatron.cachetastic_default_options.store_options.compression = true
-    configatron.cachetastic_default_options.store_options.debug = false
-    configatron.cachetastic_default_options.store_options.readonly = false
-    configatron.cachetastic_default_options.store_options.urlencode = false
+  # This is the type of file store to be used for this cache.
+  # More adapters can be developed and plugged in as desired.
+  # The default is Cachetastic::Adapters::LocalMemory
+  configatron.cachetastic.defaults.adapter = Cachetastic::Adapters::LocalMemory
+  configatron.cachetastic.defaults.adapter = Cachetastic::Adapters::File
+  configatron.cachetastic.defaults.adapter = Cachetastic::Adapters::Memcached
+
+  # This will marshall objects into and out of the store.
+  # The default is :none, except for Cachetastic::Adapters::File, which defaults to :yaml
+  configatron.cachetastic.defaults.marshall_method = :none
+  configatron.cachetastic.defaults.marshall_method = :yaml
+  configatron.cachetastic.defaults.marshall_method = :ruby
+
+  # This sets how long objects will live in the cache before they are auto expired.
+  configatron.cachetastic.defaults.default_expiry = 86400 # time in seconds (default: 24 hours)
+
+  # When setting objects into the cache the expiry_swing is +/- to the expiry time.
+  # Example: if the expiry time is 1 minute, and the swing is 15 seconds,
+  # objects will go into the cache with an expiry time sometime between 45 seconds and 75 seconds.
+  # The default is 0 seconds.
+  configatron.cachetastic.defaults.expiry_swing = 15
+
+  # Configure logging for the system.
+  # n number of logs can be configured for a cache.
+  log_1 = Logger.new(STDOUT)
+  log_1.level = Logger::DEBUG
+  log_2 = Logger.new("log/cachetastic.log")
+  log_2.level = Logger::ERROR
+  configatron.cachetastic.defaults.logger = [log_1, log_2]
     
-    # set the servers to be used for memcache
-    configatron.cachetastic_default_options.servers = ["127.0.0.1:11211"] # ip:port used for memcache
+Overriding settings per cache is very simple. Let's take the following two caches:
 
-    # listed below are the options for file:
-    configatron.cachetastic_default_options.store_options.dir = "/cachetastic/caches"
+  class UserCache < Cachetastic::Cache
+  end
 
-    # listed below are the options for drb:
-    configatron.cachetastic_default_options.servers = ["druby://127.0.0.1:61676"]
+  class Admin::UserCache < Cachetastic::Cache
+  end
 
-    # configure logging for this cache
-    # n number of logs can be configured for a cache
-    log_1 = Logger.new(STDOUT)
-    log_1.level = Logger::DEBUG
-    log_2 = Logger.new("log/cachetastic.log")
-    log_2.level = Logger::ERROR
-    configatron.cachetastic_default_options.logger = [log_1, log_2]
+If we wanted to set the <tt>UserCache</tt> to use the <tt>Cachetastic::Adapters::File</tt> adapter and we wanted to set the adapter for 
+the <tt>Admin::UserCache</tt> to use <tt>Cachetastic::Adapters::Memcached</tt>, we would configure them like such:
 
-=Cachetastic::Drb::Server
-If you want to use Drb and the Cachetastic::Adapters::Drb adapter, you'll have to use the Cachetastic::Drb::Server that comes with Cachetastic. Using this server is simple. It gets installed as a binary when you install the Cachetastic gem.
-
-  $ cachetastic_drb_server # that will start the drb server on the host 127.0.0.1 on the port 61676
+  configatron.cachetastic.user_cache.adapter = Cachetastic::Adapters::File
+  configatron.cachetastic.admin.user_cache.adapter = Cachetastic::Adapters::Memcached
   
-The server takes to command line parameters: -h <host> -p <port> -v <verbose> -rv <really verbose>
+In this scenario we have changed the adapters for each of the classes. All of the other default settings will remain intact for
+each of those classes. This makes it incredibly easy to just change the one parameter you need, and not have to reset them all.
     
-=Examples:
+==Examples:
 
-  class MyAwesomeCache < Cachetastic::Caches::Base
+  class MyAwesomeCache < Cachetastic::Cache
   end
   
   MyAwesomeCache.set(1, [1,2,3])
   MyAwesomeCache.get(1) # => [1,2,3] 
   
-  class MyAwesomeCache < Cachetastic::Caches::Base
+  class MyAwesomeCache < Cachetastic::Cache
     class << self
       def get(key, x, y)
         super(key) do

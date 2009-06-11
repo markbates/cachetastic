@@ -1,4 +1,4 @@
-module Cachetastic
+module Cachetastic # :nodoc:
   class Cache
     
     class StoreObject # :nodoc:
