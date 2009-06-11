@@ -11,7 +11,7 @@ require 'spec'
 require 'spec/rake/spectask'
 
 @gem_spec = Gem::Specification.new do |s|
-  s.name = "cachetastic-three"
+  s.name = "cachetastic"
   s.version = "3.0.0"
   s.summary = "A very simple, yet very powerful caching framework for Ruby."
   s.description = "A very simple, yet very powerful caching framework for Ruby."
@@ -19,11 +19,11 @@ require 'spec/rake/spectask'
   s.email = "mark@mackframework.com"
   s.homepage = "http://www.metabates.com"
   
-  s.files = FileList['lib/**/*.*', 'README', 'LICENSE', 'doc/**/*.*', 'bin/**/*.*']
+  s.files = FileList['lib/**/*.*', 'README', 'LICENSE', 'bin/**/*.*']
   s.require_paths = ['lib']
   s.extra_rdoc_files = ["README", 'LICENSE']
   s.has_rdoc = true
-  s.rubyforge_project = "cachetastic"
+  s.rubyforge_project = "magrathea"
   
   s.add_dependency('configatron', '>=2.3.2')
   s.add_dependency('memcache-client', '>=1.7.4')
