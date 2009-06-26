@@ -4,7 +4,7 @@ require 'activesupport'
 require 'fileutils'
 require 'memcache'
 
-Dir.glob(File.join(File.dirname(__FILE__), 'cachetastic', '**/*.rb')).each do |f|
+Dir.glob(File.join(File.dirname(__FILE__), 'cachetastic', '**/*.rb')).sort.each do |f|
   require File.expand_path(f)
 end
 
