@@ -9,6 +9,25 @@ describe Cachetastic::Cache do
     configatron.cachetastic.defaults.adapter = Cachetastic::Adapters::LocalMemory
   end
   
+  describe 'get' do
+    
+    it 'should execute a block if the result is nil' do
+      val = SimpleCache.get(:mark)
+      val.should be_nil
+      
+      val = SimpleCache.get(:mark) do |key|
+        SimpleCache.set(:mark, "Hello #{key}")
+      end
+      val.should_not be_nil
+      val.should == 'Hello mark'
+      
+      val = SimpleCache.get(:mark)
+      val.should_not be_nil
+      val.should == 'Hello mark'
+    end
+    
+  end
+  
   describe 'adapter' do
     
     it 'should return the adapter for the cache' do

@@ -136,7 +136,7 @@ module Cachetastic # :nodoc:
         end
         return val unless val.nil?
         
-        val = yield if block_given?
+        val = yield key if block_given?
         return val
       end
       
@@ -155,7 +155,7 @@ module Cachetastic # :nodoc:
           logger.debug(:finished, action, cache_klass.name, key, (end_time - start_time), str)
           return res
         else
-          return yield if block_given?
+          return yield(key) if block_given?
         end
       end
       
