@@ -17,12 +17,17 @@ end
 
 describe Cachetastic::Cacheable do
   
+  before(:each) do
+    MyObject.cache_class.clear_adapter!
+  end
+  
+  after(:each) do
+  end
+  
   describe 'cache_class' do
     
     it 'should create a new cache class if one doesnt already exist' do
-      Cachetastic::Cacheable.should_not be_const_defined(:MyObjectCache)
       MyObject.cache_class.should == Cachetastic::Cacheable::MyObjectCache
-      Cachetastic::Cacheable.should be_const_defined(:MyObjectCache)
       Cachetastic::Cacheable::MyObjectCache.new.should be_kind_of(Cachetastic::Cache)
     end
     
@@ -35,6 +40,13 @@ describe Cachetastic::Cacheable do
     
     it 'should override cache_klass to return the name of the original class, not the generated class' do
       My::Namespaced::Animal.cache_class.cache_klass.should == My::Namespaced::Animal
+    end
+    
+    it 'should use the original class name for looking up settings' do
+      configatron.temp do
+        configatron.cachetastic.my_object.adapter = Cachetastic::Adapters::Memcached
+        MyObject.cache_class.adapter.should be_instance_of(Cachetastic::Adapters::Memcached)
+      end
     end
     
   end
@@ -72,6 +84,25 @@ describe Cachetastic::Cacheable do
         My::Namespaced::Thing.shout.should == val
       end
       Cachetastic::Cacheable::My_Namespaced_ThingCache.get('shout').should == val
+    end
+    
+    it 'should return the object, not the memcached response' do
+      configatron.temp do
+        configatron.cachetastic.my_object.adapter = Cachetastic::Adapters::Memcached
+        MyObject.class_eval do 
+          def self.say_random
+            cacher('say_random') do
+              "Random!! #{rand}"
+            end
+          end
+        end
+        MyObject.cache_class.adapter.should be_instance_of(Cachetastic::Adapters::Memcached)
+        r = MyObject.say_random
+        r.should match(/^Random!! (\d{1}\.{1}\d+)$/)
+        5.times do
+          r.should == MyObject.say_random
+        end
+      end
     end
     
   end

@@ -91,6 +91,7 @@ module Cachetastic # :nodoc:
           if block_given?
             res = yield
             cache_class.set(key, res, expiry)
+            return res
           end
         end
       end
@@ -145,6 +146,7 @@ module Cachetastic # :nodoc:
     #   Person.get_from_cache("Mark Bates") # => "Mark Bates"
     def cache_self
       cache_class.set(self.cachetastic_key, self) unless self.cachetastic_key.nil?
+      return self
     end
 
     # Unless the object's cachetastic_key method returns nil this method will delete

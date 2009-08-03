@@ -12,7 +12,7 @@ require 'spec/rake/spectask'
 
 @gem_spec = Gem::Specification.new do |s|
   s.name = "cachetastic"
-  s.version = "3.0.2"
+  s.version = "3.0.3"
   s.summary = "A very simple, yet very powerful caching framework for Ruby."
   s.description = "A very simple, yet very powerful caching framework for Ruby."
   s.author = "Mark Bates"
