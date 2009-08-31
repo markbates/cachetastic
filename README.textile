@@ -1,4 +1,4 @@
-=What is Cachetastic?
+h1. What is Cachetastic?
 
 Cachetastic is an incredibly easy to use and administer caching framework. Just because it is easy to use, does not mean that it is light with features. Cachetastic allows you to create classes that extend <code>Cachetastic::Cache</code>, configure them each individually, and much more.
 
@@ -6,12 +6,13 @@ Unlike other systems each cache in your system can use different backends via th
 
 Adapters are easy to write, so if the built in adapters don't float your boat, you can easily knock one off in short order.
 
-==Configuration:
+h2. Configuration:
 
 Configuration of Cachetastic is done using the Configatron gem. I would recommend reading the documentation on it first, hcodep://configatron.mackframework.com, before continuing.
 
 All configuration settings hang off of the <code>cachetastic</code> namespace on <code>configatron</code>. The default settings all hang off the <code>defaults</code> namespace on the <code>cachetastic</code> namespace, as shown below:
 
+<pre><code>
   # This will write detailed information to the logger.
   configatron.cachetastic.defaults.debug = false
 
@@ -44,25 +45,31 @@ All configuration settings hang off of the <code>cachetastic</code> namespace on
   log_2 = Logger.new("log/cachetastic.log")
   log_2.level = Logger::ERROR
   configatron.cachetastic.defaults.logger = [log_1, log_2]
+</code></pre>
 
 Overriding settings per cache is very simple. Let's take the following two caches:
 
+<pre><code>
   class UserCache < Cachetastic::Cache
   end
 
   class Admin::UserCache < Cachetastic::Cache
   end
+</code></pre>
 
 If we wanted to set the <code>UserCache</code> to use the <code>Cachetastic::Adapters::File</code> adapter and we wanted to set the adapter for 
 the <code>Admin::UserCache</code> to use <code>Cachetastic::Adapters::Memcached</code>, we would configure them like such:
 
+<pre><code>
   configatron.cachetastic.user_cache.adapter = Cachetastic::Adapters::File
   configatron.cachetastic.admin.user_cache.adapter = Cachetastic::Adapters::Memcached
+</code></pre>
 
 In this scenario we have changed the adapters for each of the classes. All of the other default settings will remain intact for each of those classes. This makes it incredibly easy to just change the one parameter you need, and not have to reset them all.
     
-==Examples:
+h2. Examples:
 
+<pre><code>
   class MyAwesomeCache < Cachetastic::Cache
   end
   
@@ -83,3 +90,4 @@ In this scenario we have changed the adapters for each of the classes. All of th
   
   MyAwesomeCache.get(1, 2, 4) # => 8
   MyAwesomeCache.get(1, 4, 4) # => 8
+</code></pre>

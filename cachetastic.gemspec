@@ -2,13 +2,13 @@
 
 Gem::Specification.new do |s|
   s.name = %q{cachetastic}
-  s.version = "3.0.3.20090803115537"
+  s.version = "3.0.4.20090831170626"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Mark Bates"]
-  s.date = %q{2009-08-03}
+  s.authors = ["markbates"]
+  s.date = %q{2009-08-31}
   s.description = %q{A very simple, yet very powerful caching framework for Ruby.}
-  s.email = %q{mark@mackframework.com}
+  s.email = %q{mark@markbates.com}
   s.extra_rdoc_files = ["README", "LICENSE"]
   s.files = ["lib/cachetastic/adapters/base.rb", "lib/cachetastic/adapters/file.rb", "lib/cachetastic/adapters/local_memory.rb", "lib/cachetastic/adapters/memcached.rb", "lib/cachetastic/cache.rb", "lib/cachetastic/cacheable.rb", "lib/cachetastic/extensions/string.rb", "lib/cachetastic/logger.rb", "lib/cachetastic/store_object.rb", "lib/cachetastic.rb", "README", "LICENSE"]
   s.homepage = %q{http://www.metabates.com}

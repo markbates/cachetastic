@@ -40,8 +40,10 @@ module Cachetastic # :nodoc:
       # results of the block are not automatically cached.
       def get(key, &block)
         do_with_logging(:get, key) do
-          val = self.adapter.get(key)
-          handle_store_object(key, adapter.unmarshal(val), &block)
+          retryable do
+            val = self.adapter.get(key)
+            handle_store_object(key, adapter.unmarshal(val), &block)
+          end
         end
       end # get
       
@@ -55,23 +57,29 @@ module Cachetastic # :nodoc:
       # expiry time.
       def set(key, value, expiry_time = nil)
         do_with_logging(:set, key) do
-          self.adapter.set(key, value, calculate_expiry_time(expiry_time))
+          retryable do
+            self.adapter.set(key, value, calculate_expiry_time(expiry_time))
+          end
         end
       end # set
       
       # Deletes an object from the cache.
       def delete(key)
         do_with_logging(:delete, key) do
-          self.adapter.delete(key)
-          nil
+          retryable do
+            self.adapter.delete(key)
+            nil
+          end
         end
       end # delete
       
       # Expires all objects for this cache.
       def expire_all
         do_with_logging(:expire_all, nil) do
-          self.adapter.expire_all
-          nil
+          retryable do
+            self.adapter.expire_all
+            nil
+          end
         end
       end # expire_all
       
@@ -157,6 +165,28 @@ module Cachetastic # :nodoc:
         else
           return yield(key) if block_given?
         end
+      end
+      
+      def retryable(options = {}, &block)
+        opts = { :tries => 2, :on => Exception }.merge(options)
+
+        retries = opts[:tries]
+        retry_exceptions = [opts[:on]].flatten
+
+        x = %{
+          begin
+            return yield
+          rescue #{retry_exceptions.join(", ")} => e
+            retries -= 1
+            if retries > 0
+              retry
+            else
+              raise e
+            end
+          end        
+        }
+
+        eval(x, &block)
       end
       
     end # class << self
