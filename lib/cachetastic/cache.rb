@@ -168,7 +168,7 @@ module Cachetastic # :nodoc:
       end
       
       def retryable(options = {}, &block)
-        opts = { :tries => 2, :on => Exception }.merge(options)
+        opts = { :tries => 3, :on => Exception }.merge(options)
 
         retries = opts[:tries]
         retry_exceptions = [opts[:on]].flatten
@@ -179,11 +179,12 @@ module Cachetastic # :nodoc:
           rescue #{retry_exceptions.join(", ")} => e
             retries -= 1
             if retries > 0
+              clear_adapter!
               retry
             else
               raise e
             end
-          end        
+          end
         }
 
         eval(x, &block)

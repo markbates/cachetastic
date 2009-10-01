@@ -82,7 +82,7 @@ module Cachetastic # :nodoc:
       end
       
       def ns_connection
-        unless @_ns_connection
+        if !@_ns_connection || !@_ns_connection.active?
           @_ns_connection = MemCache.new(self.servers, self.mc_options.merge(:namespace => :namespace_versions))
         end
         @_ns_connection

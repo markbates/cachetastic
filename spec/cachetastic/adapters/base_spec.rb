@@ -184,6 +184,19 @@ describe Cachetastic::Adapters do
         end
 
       end
+      
+      describe 'retry' do
+        
+        it 'should retry if there is an exception' do
+          CarCache.should_receive(:clear_adapter!).twice
+          lambda {
+            CarCache.get(:audi) do
+              raise Cachetastic::BlockError.new
+            end
+          }.should raise_error(Cachetastic::BlockError)
+        end
+        
+      end
 
     end
     
