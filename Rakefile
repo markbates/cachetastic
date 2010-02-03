@@ -6,7 +6,7 @@ Gemstub.test_framework = :rspec
 Gemstub.gem_spec do |s|
   s.email = 'mark@markbates.com'
   s.homepage = 'http://www.metabates.com'
-  s.version = "3.0.5"
+  s.version = "3.0.5.1"
   s.summary = "A very simple, yet very powerful caching framework for Ruby."
   s.description = "A very simple, yet very powerful caching framework for Ruby."
   s.rubyforge_project = "magrathea"

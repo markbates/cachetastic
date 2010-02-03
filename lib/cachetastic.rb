@@ -1,6 +1,6 @@
 require 'configatron'
 require 'logger'
-require 'activesupport'
+require 'active_support'
 require 'fileutils'
 require 'memcache'
 
