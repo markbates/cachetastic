@@ -1,7 +1,8 @@
-require 'rubygems'
-require 'spec'
+ENV["RACK_ENV"] ||= "test"
 
-require File.join(File.dirname(__FILE__), '..', 'lib', 'cachetastic')
+require 'bundler/setup'
+
+require 'cachetastic' # and any other gems you need
 
 Spec::Runner.configure do |config|
   

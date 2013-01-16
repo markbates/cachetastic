@@ -1,8 +1,11 @@
 require 'configatron'
 require 'logger'
-require 'active_support'
+require 'active_support/core_ext'
 require 'fileutils'
-require 'memcache'
+begin
+  require 'memcache'
+rescue Exception => e
+end
 
 Dir.glob(File.join(File.dirname(__FILE__), 'cachetastic', '**/*.rb')).sort.each do |f|
   require File.expand_path(f)
