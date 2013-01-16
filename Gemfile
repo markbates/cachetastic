@@ -5,3 +5,4 @@ gemspec
 
 gem 'memcache-client'
 gem 'rspec'
+gem 'timecop'

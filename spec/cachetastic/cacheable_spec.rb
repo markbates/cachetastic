@@ -28,14 +28,14 @@ describe Cachetastic::Cacheable do
     
     it 'should create a new cache class if one doesnt already exist' do
       MyObject.cache_class.should == Cachetastic::Cacheable::MyObjectCache
-      Cachetastic::Cacheable::MyObjectCache.new.should be_kind_of(Cachetastic::Cache)
+      Cachetastic::Cacheable::MyObjectCache.instance.should be_kind_of(Cachetastic::Cache)
     end
     
     it 'should handle namespaced classes correctly' do
       Cachetastic::Cacheable.should_not be_const_defined(:My_Namespaced_ThingCache)
       My::Namespaced::Thing.cache_class.should == Cachetastic::Cacheable::My_Namespaced_ThingCache
       Cachetastic::Cacheable.should be_const_defined(:My_Namespaced_ThingCache)
-      Cachetastic::Cacheable::My_Namespaced_ThingCache.new.should be_kind_of(Cachetastic::Cache)
+      Cachetastic::Cacheable::My_Namespaced_ThingCache.instance.should be_kind_of(Cachetastic::Cache)
     end
     
     it 'should override cache_klass to return the name of the original class, not the generated class' do

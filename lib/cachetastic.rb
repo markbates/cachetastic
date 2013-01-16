@@ -2,6 +2,7 @@ require 'configatron'
 require 'logger'
 require 'active_support/core_ext'
 require 'fileutils'
+require 'singleton'
 begin
   require 'memcache'
 rescue Exception => e

@@ -38,7 +38,10 @@ module Cachetastic # :nodoc:
       end # set
       
       def delete(key) # :nodoc:
-        FileUtils.rm(file_path(key))
+        path = file_path(key)
+        if ::File.exists?(path)
+          FileUtils.rm(path)
+        end
       end # delete
       
       def expire_all # :nodoc:

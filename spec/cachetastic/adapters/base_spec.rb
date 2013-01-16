@@ -99,6 +99,7 @@ describe Cachetastic::Adapters do
       before(:each) do
         configatron.cachetastic.defaults.adapter = "Cachetastic::Adapters::#{adapter}".constantize
         CarCache.clear_adapter!
+        CarCache.expire_all
         CarCache.set(:vw, 'Rabbit')
       end
 
@@ -153,12 +154,14 @@ describe Cachetastic::Adapters do
           CarCache.get(:bmw).should_not be_nil
         end
         
-        it 'should set an object into the cache with an expiry' do
-          CarCache.get(:bmw).should be_nil
-          CarCache.set(:bmw, 'Beamer!', 1)
-          CarCache.get(:bmw).should_not be_nil
-          sleep(2)
-          CarCache.get(:bmw).should be_nil
+        unless adapter == "Memcached"
+          it 'should set an object into the cache with an expiry' do
+            CarCache.get(:bmw).should be_nil
+            CarCache.set(:bmw, 'Beamer!', 1)
+            CarCache.get(:bmw).should_not be_nil
+            Timecop.travel(1.hour.from_now)
+            CarCache.get(:bmw).should be_nil
+          end
         end
 
       end
@@ -188,7 +191,7 @@ describe Cachetastic::Adapters do
       describe 'retry' do
         
         it 'should retry if there is an exception' do
-          CarCache.should_receive(:clear_adapter!).twice
+          CarCache.instance.should_receive(:clear_adapter!).twice
           lambda {
             CarCache.get(:audi) do
               raise Cachetastic::BlockError.new

@@ -48,7 +48,7 @@ module Cachetastic # :nodoc:
           eval %{
             class #{c_name} < Cachetastic::Cache
               
-              def self.cache_klass
+              def cache_klass
                 #{n}
               end
               

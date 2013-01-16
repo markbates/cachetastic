@@ -3,25 +3,18 @@ ENV["RACK_ENV"] ||= "test"
 require 'bundler/setup'
 
 require 'cachetastic' # and any other gems you need
+require 'timecop'
 
-Spec::Runner.configure do |config|
-  
-  config.before(:all) do
-    
+RSpec.configure do |config|
+
+  config.before do
+    Timecop.freeze
   end
-  
-  config.after(:all) do
-    
+
+  config.after do
+    Timecop.return
   end
-  
-  config.before(:each) do
-    
-  end
-  
-  config.after(:each) do
-    
-  end
-  
+
 end
 
 class Cachetastic::BlockError < StandardError
