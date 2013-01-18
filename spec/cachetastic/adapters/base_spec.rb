@@ -154,7 +154,7 @@ describe Cachetastic::Adapters do
           CarCache.get(:bmw).should_not be_nil
         end
         
-        unless adapter == "Memcached"
+        unless ["Memcached", "Redis"].include?(adapter)
           it 'should set an object into the cache with an expiry' do
             CarCache.get(:bmw).should be_nil
             CarCache.set(:bmw, 'Beamer!', 1)
