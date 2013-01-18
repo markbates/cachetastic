@@ -17,5 +17,8 @@ RSpec.configure do |config|
 
 end
 
+class CarCache < Cachetastic::Cache
+end
+
 class Cachetastic::BlockError < StandardError
 end

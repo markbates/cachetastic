@@ -1,8 +1,5 @@
 require 'spec_helper'
 
-class CarCache < Cachetastic::Cache
-end
-
 describe Cachetastic::Adapters do
 
   describe 'build' do

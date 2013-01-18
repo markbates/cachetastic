@@ -6,12 +6,17 @@ module Cachetastic
         define_accessor(:redis_host)
         define_accessor(:redis_options)
         define_accessor(:delete_delay)
+        super
         self.redis_host ||= "redis://localhost:6379/"
+        parsed_url = URI.parse(self.redis_host)
         self.redis_options = ::Redis::Client::DEFAULTS.merge({
           db: "cachetastic",
-          url: self.redis_host
+          url: self.redis_host,
+          scheme: parsed_url.scheme,
+          host: parsed_url.host,
+          port: parsed_url.port,
+          password: parsed_url.password
         })
-        super(klass)
         self.marshal_method = :yaml if self.marshal_method == :none
         connection
       end
