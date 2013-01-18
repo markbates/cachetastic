@@ -35,6 +35,15 @@ module Cachetastic # :nodoc:
         self.instance.send(sym, *args, &block)
       end
 
+      def available_caches
+        @available_caches ||= []
+      end
+
+      def inherited(klass)
+        available_caches << klass
+        super
+      end
+
     end # class << self
 
     # Returns an object from the cache for a given key.
