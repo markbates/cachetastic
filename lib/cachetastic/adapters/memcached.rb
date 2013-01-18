@@ -27,6 +27,10 @@ module Cachetastic # :nodoc:
     # See <tt>Cachetastic::Adapters::Base</tt> for a list of public API
     # methods.
     class Memcached < Cachetastic::Adapters::Base
+
+      attr_accessor :servers
+      attr_accessor :mc_options
+      attr_accessor :delete_delay
       
       def initialize(klass) # :nodoc:
         define_accessor(:servers)
@@ -34,11 +38,13 @@ module Cachetastic # :nodoc:
         define_accessor(:delete_delay)
         self.delete_delay = 0
         self.servers = ['127.0.0.1:11211']
-        self.mc_options = {c_threshold: 10_000,
-                           compression: true,
-                           debug: false,
-                           readonly: false,
-                           urlencode: false}
+        self.mc_options = {
+          c_threshold: 10_000,
+          compression: true,
+          debug: false,
+          readonly: false,
+          urlencode: false
+        }
         super
         connection
       end

@@ -3,9 +3,16 @@ require 'logger'
 require 'active_support/core_ext'
 require 'fileutils'
 require 'singleton'
+require 'uri'
 begin
   require 'memcache'
 rescue Exception => e
+  puts "Memcached support is unavailable. To use Memcached do `gem install memcache-client`"
+end
+begin
+  require 'redis'
+rescue Exception => e
+  puts "Redis support is unavailable. To use Redis do `gem install redis`"
 end
 
 Dir.glob(File.join(File.dirname(__FILE__), 'cachetastic', '**/*.rb')).sort.each do |f|

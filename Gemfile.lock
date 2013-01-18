@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cachetastic (3.2.0)
+    cachetastic (3.5.0)
       activesupport
       configatron
 
@@ -18,6 +18,7 @@ GEM
     memcache-client (1.8.5)
     multi_json (1.5.0)
     rake (10.0.3)
+    redis (3.0.2)
     rspec (2.12.0)
       rspec-core (~> 2.12.0)
       rspec-expectations (~> 2.12.0)
@@ -36,5 +37,6 @@ DEPENDENCIES
   cachetastic!
   memcache-client
   rake
+  redis
   rspec
   timecop

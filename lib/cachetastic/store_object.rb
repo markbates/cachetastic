@@ -15,6 +15,10 @@ module Cachetastic # :nodoc:
       def expired?
         return Time.now > self.expires_at
       end
+
+      def inspect
+        "#<Cachetastic::Cache::StoreObject key='#{self.key}' expires_at='#{self.expires_at}' value='#{self.value}'>"
+      end
       
     end # StoreObject
     

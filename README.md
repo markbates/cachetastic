@@ -22,9 +22,10 @@ configatron.cachetastic.defaults.debug = false
 configatron.cachetastic.defaults.adapter = Cachetastic::Adapters::LocalMemory
 configatron.cachetastic.defaults.adapter = Cachetastic::Adapters::File
 configatron.cachetastic.defaults.adapter = Cachetastic::Adapters::Memcached
+configatron.cachetastic.defaults.adapter = Cachetastic::Adapters::Redis
 
 # This will marshall objects into and out of the store.
-# The default is :none, except for Cachetastic::Adapters::File, which defaults to :yaml
+# The default is :none, except for Cachetastic::Adapters::File and Cachetastic::Adapters::Redis, which default to :yaml
 configatron.cachetastic.defaults.marshall_method = :none
 configatron.cachetastic.defaults.marshall_method = :yaml
 configatron.cachetastic.defaults.marshall_method = :ruby
@@ -32,7 +33,7 @@ configatron.cachetastic.defaults.marshall_method = :ruby
 # This sets how long objects will live in the cache before they are auto expired.
 configatron.cachetastic.defaults.default_expiry = 86400 # time in seconds (default: 24 hours)
 
-# When secodeing objects into the cache the expiry_swing is +/- to the expiry time.
+# When saving objects into the cache the expiry_swing is +/- to the expiry time.
 # Example: if the expiry time is 1 minute, and the swing is 15 seconds,
 # objects will go into the cache with an expiry time sometime between 45 seconds and 75 seconds.
 # The default is 0 seconds.
