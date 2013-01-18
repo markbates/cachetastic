@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cachetastic (3.5.1)
+    cachetastic (3.5.2)
       activesupport
       configatron
 
