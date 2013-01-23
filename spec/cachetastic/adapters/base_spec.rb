@@ -89,7 +89,7 @@ describe Cachetastic::Adapters do
     
   end
   
-  ['LocalMemory', 'File', 'Memcached', 'Redis', 'Dalli'].each do |adapter|
+  ['LocalMemory', 'File', 'Memcached', 'Redis', 'Dalli', 'Mongoid'].each do |adapter|
     
     describe "#{adapter} (Common)" do
 

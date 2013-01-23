@@ -5,6 +5,11 @@ require 'fileutils'
 require 'singleton'
 require 'uri'
 begin
+  require 'mongoid'
+rescue Exception => e
+  puts "Mongoid 3 support is unavailable. To use Mongoid 3 do `gem install mongoid`"
+end
+begin
   require 'memcache'
 rescue Exception => e
   puts "Memcached support is unavailable. To use Memcached do `gem install memcache-client`"
