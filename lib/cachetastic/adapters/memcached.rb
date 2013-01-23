@@ -5,7 +5,7 @@ module Cachetastic # :nodoc:
     # This adapter supports the following configuration settings,
     # in addition to the default settings:
     # 
-    #   configatron.cachetastic.defaults.servers = ['127.0.0.1:11211']
+    #   configatron.cachetastic.defaults.mc_servers = ['127.0.0.1:11211']
     #   configatron.cachetastic.defaults.mc_options = {c_threshold: 10_000,
     #                                                  compression: true,
     #                                                  debug: false,
@@ -13,8 +13,8 @@ module Cachetastic # :nodoc:
     #                                                  urlencode: false}
     #   configatron.cachetastic.delete_delay = 0
     # 
-    # The <tt>servers</tt> setting defines an <tt>Array</tt> of Mecached
-    # servers, represented as "<host>:<port>".
+    # The <tt>mc_servers</tt> setting defines an <tt>Array</tt> of Memcached
+    # mc_servers, represented as "<host>:<port>".
     # 
     # The <tt>mc_options</tt> setting is a <tt>Hash</tt> of settings required
     # by Memcached. See the Memcached documentation for more information on
@@ -28,16 +28,12 @@ module Cachetastic # :nodoc:
     # methods.
     class Memcached < Cachetastic::Adapters::Base
 
-      attr_accessor :servers
-      attr_accessor :mc_options
-      attr_accessor :delete_delay
-      
       def initialize(klass) # :nodoc:
-        define_accessor(:servers)
+        define_accessor(:mc_servers)
         define_accessor(:mc_options)
         define_accessor(:delete_delay)
         self.delete_delay = 0
-        self.servers = ['127.0.0.1:11211']
+        self.mc_servers = ['127.0.0.1:11211']
         self.mc_options = {
           c_threshold: 10_000,
           compression: true,
@@ -82,14 +78,14 @@ module Cachetastic # :nodoc:
       private
       def connection
         unless @_mc_connection && valid? && @_ns_version == get_version
-          @_mc_connection = MemCache.new(self.servers, self.mc_options.merge(namespace: namespace))
+          @_mc_connection = MemCache.new(self.mc_servers, self.mc_options.merge(namespace: namespace))
         end
         @_mc_connection
       end
       
       def ns_connection
         if !@_ns_connection || !@_ns_connection.active?
-          @_ns_connection = MemCache.new(self.servers, self.mc_options.merge(namespace: :namespace_versions))
+          @_ns_connection = MemCache.new(self.mc_servers, self.mc_options.merge(namespace: :namespace_versions))
         end
         @_ns_connection
       end

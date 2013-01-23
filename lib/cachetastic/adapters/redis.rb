@@ -26,7 +26,7 @@ module Cachetastic
       end # get
 
       def set(key, value, expiry_time = configatron.cachetastic.defaults.default_expiry) # :nodoc:
-        connection.setex(transform_key(key), expiry_time, marshal(value))
+        connection.setex(transform_key(key), expiry_time, value)
         return value
       end # set
 

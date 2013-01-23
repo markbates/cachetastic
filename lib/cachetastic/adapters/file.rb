@@ -31,7 +31,7 @@ module Cachetastic # :nodoc:
       end # get
       
       def set(key, value, expiry_time = configatron.cachetastic.defaults.default_expiry) # :nodoc:
-        so = Cachetastic::Cache::StoreObject.new(key, value, expiry_time.from_now)
+        so = Cachetastic::Cache::StoreObject.new(key, unmarshal(value), expiry_time.from_now)
         path = file_path(key)
         ::File.open(path, 'w') {|f| f.write marshal(so)}
         value

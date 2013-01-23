@@ -10,6 +10,11 @@ rescue Exception => e
   puts "Memcached support is unavailable. To use Memcached do `gem install memcache-client`"
 end
 begin
+  require 'dalli'
+rescue Exception => e
+  puts "Memcached (via Dalli) support is unavailable. To use Memcached (via Dalli) do `gem install dalli`"
+end
+begin
   require 'redis'
 rescue Exception => e
   puts "Redis support is unavailable. To use Redis do `gem install redis`"

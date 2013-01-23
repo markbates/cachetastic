@@ -72,7 +72,7 @@ module Cachetastic # :nodoc:
     def set(key, value, expiry_time = nil)
       do_with_logging(:set, key) do
         retryable do
-          self.adapter.set(key, value, calculate_expiry_time(expiry_time))
+          self.adapter.set(key, adapter.marshal(value), calculate_expiry_time(expiry_time))
         end
       end
     end # set
@@ -174,6 +174,7 @@ module Cachetastic # :nodoc:
         end_time = Time.now
         str = ''
         unless res.nil?
+          res = adapter.unmarshal(res)
           str = "[#{res.class.name}]"
           str << "\t[Size = #{res.size}]" if res.respond_to? :size
           str << "\t" << res.inspect

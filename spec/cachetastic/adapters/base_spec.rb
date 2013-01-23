@@ -89,7 +89,7 @@ describe Cachetastic::Adapters do
     
   end
   
-  ['LocalMemory', 'File', 'Memcached', 'Redis'].each do |adapter|
+  ['LocalMemory', 'File', 'Memcached', 'Redis', 'Dalli'].each do |adapter|
     
     describe "#{adapter} (Common)" do
 
@@ -151,7 +151,7 @@ describe Cachetastic::Adapters do
           CarCache.get(:bmw).should_not be_nil
         end
         
-        unless ["Memcached", "Redis"].include?(adapter)
+        unless ["Memcached", "Redis", "Dalli"].include?(adapter)
           it 'should set an object into the cache with an expiry' do
             CarCache.get(:bmw).should be_nil
             CarCache.set(:bmw, 'Beamer!', 1)
